@@ -1,0 +1,33 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Client {
+  id     String     @id @default(uuid())
+  name   String
+  email  String  @unique
+  status ClientStatus @default(ACTIVE)
+  assets Asset[]
+
+  @@map("clients")
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Asset {
+  id       String    @id @default(uuid())
+  name     String
+  value    Decimal
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+
+  @@map("assets")
+}
