@@ -4,7 +4,7 @@ export const clientStatusSchema = z.enum(['ACTIVE', 'INACTIVE'])
 
 export const createClientSchema = z.object({
     name: z.string().min(1).max(255),
-    email: z.string().email()
+    email: z.string().email(),
 })
 
 export const updateClientSchema = z.object({
