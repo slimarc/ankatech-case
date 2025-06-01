@@ -4,11 +4,8 @@ services:
   db:
     image: mysql:8.0
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: secure_root_password
-      MYSQL_DATABASE: investdb
-      MYSQL_USER: investuser
-      MYSQL_PASSWORD: secure_password
+    env_file:
+      - .env.docker
     ports:
       - "3306:3306"
     volumes:
@@ -20,8 +17,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
-    environment:
-      DATABASE_URL: "mysql://investuser:secure_password@db:3306/investdb"
+    env_file:
+      - .env.docker
     depends_on:
       - db
 
