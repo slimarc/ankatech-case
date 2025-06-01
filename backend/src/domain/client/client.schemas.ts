@@ -36,7 +36,7 @@ export const clientResponseSchema = z.object({
 })
 
 export const clientsResponseSchema = z.object({
-    items: z.array(clientResponseSchema),
+    clients: z.array(clientResponseSchema),
     total: z.number(),
     page: z.number(),
     limit: z.number()
