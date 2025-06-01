@@ -15,21 +15,19 @@ export class PrismaClientRepository implements ClientRepository {
     }
 
     async create(data: CreateClient): Promise<ClientResponse> {
-        const client = await this.prisma.client.create({
+        return this.prisma.client.create({
             data: {
                 ...data,
             }
         })
-        return client
     }
 
     async findById(params: FindClient): Promise<ClientResponse> {
-        const client = await this.prisma.client.findUniqueOrThrow({
+        return this.prisma.client.findUniqueOrThrow({
             where: {
                 id: params.id
             }
         })
-        return client
     }
 
     async findMany(params: FindClients): Promise<ClientsResponse> {
@@ -61,15 +59,14 @@ export class PrismaClientRepository implements ClientRepository {
     }
 
     async update(id: string, data: UpdateClient): Promise<ClientResponse> {
-        const client = await this.prisma.client.update({
+        return this.prisma.client.update({
             where: {id},
             data
         })
-        return client
     }
 
     async delete(params: DeleteClient): Promise<void> {
-        await this.prisma.client.delete({
+        return this.prisma.client.delete({
             where: {
                 id: params.id
             }
