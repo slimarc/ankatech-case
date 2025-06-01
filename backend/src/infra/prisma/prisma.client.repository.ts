@@ -41,7 +41,7 @@ export class PrismaClientRepository implements ClientRepository {
             })
         }
 
-        const [items, total] = await Promise.all([
+        const [clients, total] = await Promise.all([
             this.prisma.client.findMany({
                 where,
                 skip: (params.page - 1) * params.limit,
@@ -51,7 +51,7 @@ export class PrismaClientRepository implements ClientRepository {
         ])
 
         return {
-            items,
+            clients,
             total,
             page: params.page,
             limit: params.limit
