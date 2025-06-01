@@ -1,14 +1,12 @@
-import fastify from 'fastify';
+import { buildApp } from './app'
 
-const app = fastify();
+const app = buildApp()
 
-app.get<{ Reply: { message: string } }>('/client', async () => {
-    return { message: 'Route clients' };
-});
-
-app.listen({
-    host: '0.0.0.0',
-    port: 4000,
-}).then(() => {
-    console.log('Server is running http://localhost:4000');
-});
+app.listen({ port: 4000, host: '0.0.0.0' })
+    .then(() => {
+        console.log('Server running on http://localhost:4000')
+    })
+    .catch(err => {
+        app.log.error(err)
+        process.exit(1)
+    })
