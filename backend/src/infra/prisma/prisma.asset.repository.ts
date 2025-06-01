@@ -57,7 +57,7 @@ export class PrismaAssetRepository implements AssetRepository{
             })
         }
 
-        const [items, total] = await Promise.all([
+        const [assets, total] = await Promise.all([
             this.prisma.asset.findMany({
                 where,
                 skip: (params.page - 1) * params.limit,
@@ -67,7 +67,7 @@ export class PrismaAssetRepository implements AssetRepository{
         ])
 
         return {
-            items,
+            assets,
             total,
             page: params.page,
             limit: params.limit
@@ -85,7 +85,7 @@ export class PrismaAssetRepository implements AssetRepository{
             clientId: params.clientId
         }
 
-        const [items, total] = await Promise.all([
+        const [assets, total] = await Promise.all([
             this.prisma.asset.findMany({
                 where,
                 skip: (params.page - 1) * params.limit,
@@ -95,7 +95,7 @@ export class PrismaAssetRepository implements AssetRepository{
         ])
 
         return {
-            items,
+            assets,
             total,
             page: params.page
         }

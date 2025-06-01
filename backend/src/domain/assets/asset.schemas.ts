@@ -40,14 +40,14 @@ export const assetResponseSchema = z.object({
 })
 
 export const assetsResponseSchema = z.object({
-    items: z.array(assetResponseSchema),
+    assets: z.array(assetResponseSchema),
     total: z.number(),
     page: z.number(),
     limit: z.number()
 })
 
 export const assetsByClientResponseSchema = z.object({
-    items: z.array(assetResponseSchema),
+    assets: z.array(assetResponseSchema),
     total: z.number(),
     page: z.number(),
 })
