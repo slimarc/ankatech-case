@@ -1,12 +1,13 @@
 import {
-    CreateClient,
-    UpdateClient,
     ClientResponse,
     ClientsResponse,
+    CreateClient,
+    DeleteClient,
     FindClient,
     FindClients,
-    DeleteClient
-} from './client.schemas'
+    UpdateClient
+} from "./client.schemas";
+
 
 export interface ClientRepository {
     create(data: CreateClient): Promise<ClientResponse>
