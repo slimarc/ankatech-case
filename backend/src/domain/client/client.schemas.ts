@@ -32,7 +32,8 @@ export const clientResponseSchema = z.object({
     id: z.string().uuid(),
     name: z.string(),
     email: z.string().email(),
-    status: clientStatusSchema
+    status: clientStatusSchema,
+    portfolioId: z.string().uuid().nullable()
 })
 
 export const clientsResponseSchema = z.object({
@@ -42,7 +43,6 @@ export const clientsResponseSchema = z.object({
     limit: z.number()
 })
 
-export type ClientStatus = z.infer<typeof clientStatusSchema>
 export type CreateClient = z.infer<typeof createClientSchema>
 export type UpdateClient = z.infer<typeof updateClientSchema>
 export type FindClient = z.infer<typeof findClientSchema>
