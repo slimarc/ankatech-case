@@ -20,7 +20,7 @@ export class PrismaAssetRepository implements AssetRepository{
         return {
             id: asset.id,
             name: asset.name,
-            currentValue: Number(asset.currentValue)
+            currentValue: asset.currentValue.toString(),
         }
     }
 
@@ -33,7 +33,7 @@ export class PrismaAssetRepository implements AssetRepository{
         return {
             id: asset.id,
             name: asset.name,
-            currentValue: asset.currentValue.toNumber(),
+            currentValue: asset.currentValue.toString(),
         }
     }
 
@@ -51,19 +51,18 @@ export class PrismaAssetRepository implements AssetRepository{
         return {
             id: asset.id,
             name: asset.name,
-            currentValue: Number(asset.currentValue),
+            currentValue: asset.currentValue.toString(),
         }
     }
 
     async findMany(params: FindAssets): Promise<AssetsResponse> {
-        const where = params.search
-            ? {
-                OR: [
-                    { name: { contains: params.search, mode: 'insensitive' } },
-                    { currentValue: { equals: Number(params.search) || 0 } }
-                ]
-            }
-            : {}
+        const where = {
+            AND: [
+                params.search ? { name: { contains: params.search, mode: 'insensitive' } } : {},
+                params.minValue ? { currentValue: { gte: params.minValue } } : {},
+                params.maxValue ? { currentValue: { lte: params.maxValue } } : {},
+            ],
+        };
 
         const [assets, total] = await Promise.all([
             this.prisma.asset.findMany({
@@ -78,7 +77,7 @@ export class PrismaAssetRepository implements AssetRepository{
             assets: assets.map(asset => ({
                 id: asset.id,
                 name: asset.name,
-                currentValue: Number(asset.currentValue),
+                currentValue: asset.currentValue.toString(),
             })),
             total,
             page: params.page,
