@@ -13,33 +13,43 @@ enum ClientStatus {
 }
 
 model Client {
-  id         String       @id @default(uuid())
-  name       String
-  email      String       @unique
-  status     ClientStatus @default(ACTIVE)
-  portfolios Portfolio[]
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  status    ClientStatus @default(ACTIVE)
+  portfolio Portfolio?
 
   @@map("clients")
 }
 
-model Asset {
-  id    String  @id @default(uuid())
-  name  String  @unique
-  currentValue Decimal @db.Decimal(30, 2)
+model Portfolio {
+  id        String           @id @default(uuid())
+  clientId  String           @unique
+  client    Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  assets    AssetHolding[]
 
-  portfolios Portfolio[]
+  @@map("portfolios")
+}
+
+model AssetHolding {
+  id          String    @id @default(uuid())
+  portfolioId String
+  assetId     String
+  quantity    Decimal   @db.Decimal(20, 4)
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  asset       Asset     @relation(fields: [assetId], references: [id])
+
+  @@unique([portfolioId, assetId])
+  @@map("portfolio_assets")
+}
+
+model Asset {
+  id              String           @id @default(uuid())
+  name            String           @unique
+  currentValue    Decimal          @db.Decimal(30, 2)
+  portfolioAssets AssetHolding[]
 
   @@map("assets")
 }
 
-model Portfolio {
-  id        String    @id @default(uuid())
-  clientId  String
-  assetId   String
-  quantity  Decimal   @db.Decimal(20, 4)
-  client    Client    @relation(fields: [clientId], references: [id])
-  asset     Asset     @relation(fields: [assetId], references: [id])
-
-  @@unique([clientId, assetId])
-  @@map("portfolios")
-}
