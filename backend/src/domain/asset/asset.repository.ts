@@ -1,9 +1,10 @@
 import {
     AssetResponse,
-    AssetsByClientResponse,
     AssetsResponse,
     CreateAsset,
-    DeleteAsset, FindAsset, FindAssets, FindAssetsByClient,
+    DeleteAsset,
+    FindAsset,
+    FindAssets,
     UpdateAsset
 } from "./asset.schemas";
 
@@ -13,8 +14,6 @@ export interface AssetRepository {
     findById(params: FindAsset): Promise<AssetResponse>
 
     findMany(params: FindAssets): Promise<AssetsResponse>
-
-    findManyByClientId(params: FindAssetsByClient): Promise<AssetsByClientResponse>
 
     update(id: string, data: UpdateAsset): Promise<AssetResponse>
 
