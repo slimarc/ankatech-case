@@ -7,27 +7,39 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Client {
-  id     String     @id @default(uuid())
-  name   String
-  email  String  @unique
-  status ClientStatus @default(ACTIVE)
-  assets Asset[]
-
-  @@map("clients")
-}
-
 enum ClientStatus {
   ACTIVE
   INACTIVE
 }
 
+model Client {
+  id         String       @id @default(uuid())
+  name       String
+  email      String       @unique
+  status     ClientStatus @default(ACTIVE)
+  portfolios Portfolio[]
+
+  @@map("clients")
+}
+
 model Asset {
-  id       String    @id @default(uuid())
-  name     String
-  value    Decimal
-  clientId String
-  client   Client @relation(fields: [clientId], references: [id])
+  id    String  @id @default(uuid())
+  name  String  @unique
+  currentValue Decimal @db.Decimal(30, 2)
+
+  portfolios Portfolio[]
 
   @@map("assets")
+}
+
+model Portfolio {
+  id        String    @id @default(uuid())
+  clientId  String
+  assetId   String
+  quantity  Decimal   @db.Decimal(20, 4)
+  client    Client    @relation(fields: [clientId], references: [id])
+  asset     Asset     @relation(fields: [assetId], references: [id])
+
+  @@unique([clientId, assetId])
+  @@map("portfolios")
 }
