@@ -5,30 +5,30 @@ export const clientRoutes = (fastify: FastifyInstance, controller: ClientControl
     fastify.route({
         method: 'POST',
         url: '/clients',
-        handler: controller.create.bind(controller),
+        handler: controller.create.bind(controller)
     })
 
     fastify.route({
         method: 'GET',
         url: '/clients/:id',
-        handler: controller.findById.bind(controller),
+        handler: controller.findById.bind(controller)
     })
 
     fastify.route({
         method: 'GET',
         url: '/clients',
-        handler: controller.findMany.bind(controller),
+        handler: controller.findMany.bind(controller)
     })
 
     fastify.route({
         method: 'PATCH',
         url: '/clients/:id',
-        handler: controller.update.bind(controller),
+        handler: controller.update.bind(controller)
     })
 
     fastify.route({
         method: 'DELETE',
         url: '/clients/:id',
-        handler: controller.delete.bind(controller),
+        handler: controller.delete.bind(controller)
     })
 }

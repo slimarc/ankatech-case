@@ -1,5 +1,5 @@
-import {PrismaClient} from '@prisma/client'
-import {ClientRepository} from "../../domain/client/client.repository";
+import { PrismaClient } from '@prisma/client'
+import {ClientRepository} from "@domain/client/client.repository";
 import {
     ClientResponse,
     ClientsResponse,
@@ -8,7 +8,7 @@ import {
     FindClient,
     FindClients,
     UpdateClient
-} from "../../domain/client/client.schemas";
+} from "@domain/client/client.schemas";
 
 export class PrismaClientRepository implements ClientRepository {
     constructor(private readonly prisma: PrismaClient) {
@@ -66,10 +66,8 @@ export class PrismaClientRepository implements ClientRepository {
     }
 
     async delete(params: DeleteClient): Promise<void> {
-        return this.prisma.client.delete({
-            where: {
-                id: params.id
-            }
+        await this.prisma.client.delete({
+            where: { id: params.id }
         })
     }
 

@@ -1,4 +1,4 @@
-import {ClientRepository} from "../../domain/client/client.repository";
+import {ClientRepository} from "@domain/client/client.repository";
 import {
     ClientResponse, ClientsResponse,
     CreateClient,
@@ -6,7 +6,7 @@ import {
     FindClient,
     FindClients,
     UpdateClient
-} from "../../domain/client/client.schemas";
+} from "@domain/client/client.schemas";
 
 
 export class ClientService {
