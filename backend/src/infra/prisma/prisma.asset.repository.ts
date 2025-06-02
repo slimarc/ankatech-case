@@ -1,103 +1,89 @@
-import {PrismaAsset} from "@prisma/asset";
+import { PrismaClient } from "@prisma/client";
 import {
     CreateAsset,
-    AsssetResponse,
+    AssetResponse,
+    AssetsResponse,
     FindAsset,
     FindAssets,
     UpdateAsset,
     DeleteAsset,
-    FindAssetsByClient,
-    AssetsByClientResponse,
-} from "../../domain/assets/asset.schemas";
-import {AssetRepository} from "../../domain/assets/asset.repository";
+} from "@domain/asset/asset.schemas";
+import {AssetRepository} from "@domain/asset/asset.repository";
 
 
 export class PrismaAssetRepository implements AssetRepository{
-    constructor(private readonly prisma: PrismaAsset) {
+    constructor(private readonly prisma: PrismaClient) {
     }
 
-    async create(data: CreateAsset): Promise<AsssetResponse> {
-        return this.prisma.asset.create({
-            data: {
-                ...data,
-            }
-        })
+    async create(data: CreateAsset): Promise<AssetResponse> {
+        const asset = await this.prisma.asset.create({ data })
+        return {
+            id: asset.id,
+            name: asset.name,
+            currentValue: Number(asset.currentValue)
+        }
     }
 
-    async update(id: string, data: UpdateAsset): Promise<AsssetResponse>{
-        return await this.prisma.asset.update({
-            where: {id},
+    async update(id: string, data: UpdateAsset): Promise<AssetResponse> {
+        const asset = await this.prisma.asset.update({
+            where: { id },
             data
         })
-    }
 
-    async delete(params:DeleteAsset): Promise<void> {
-        return this.prisma.asset.delete({
-            where: {
-                id: params.id
-            }
-        })
-    }
-
-    async findById(params: FindAsset): Promise<AsssetResponse> {
-        return this.prisma.asset.findUniqueOrThrow({
-            where: {
-                id: params.id
-            }
-        })
-    }
-
-    async findMany(params: FindAssets): Promise<AsssetsResponse> {
-        const where = {
-            ...(params.search && {
-                OR: [
-                    {name: {contains: params.search, mode: 'insensitive'}},
-                    {value: {contains: params.search, mode: 'insensitive'}}
-                ]
-            })
+        return {
+            id: asset.id,
+            name: asset.name,
+            currentValue: asset.currentValue.toNumber(),
         }
+    }
+
+    async delete(params: DeleteAsset): Promise<void> {
+        await this.prisma.asset.delete({
+            where: { id: params.id }
+        })
+    }
+
+    async findById(params: FindAsset): Promise<AssetResponse> {
+        const asset = await this.prisma.asset.findUniqueOrThrow({
+            where: { id: params.id }
+        })
+
+        return {
+            id: asset.id,
+            name: asset.name,
+            currentValue: Number(asset.currentValue),
+        }
+    }
+
+    async findMany(params: FindAssets): Promise<AssetsResponse> {
+        const where = params.search
+            ? {
+                OR: [
+                    { name: { contains: params.search, mode: 'insensitive' } },
+                    { currentValue: { equals: Number(params.search) || 0 } }
+                ]
+            }
+            : {}
 
         const [assets, total] = await Promise.all([
             this.prisma.asset.findMany({
                 where,
                 skip: (params.page - 1) * params.limit,
-                take: params.limit
+                take: params.limit,
             }),
-            this.prisma.asset.count({where})
+            this.prisma.asset.count({ where }),
         ])
 
         return {
-            assets,
+            assets: assets.map(asset => ({
+                id: asset.id,
+                name: asset.name,
+                currentValue: Number(asset.currentValue),
+            })),
             total,
             page: params.page,
-            limit: params.limit
+            limit: params.limit,
         }
     }
 
-    async findManyByClientId(params: FindAssetsByClient): Promise<AssetsByClientResponse> {
-        const where = {
-            ...(params.search && {
-                OR: [
-                    {name: {contains: params.search, mode: 'insensitive'}},
-                    {value: {contains: params.search, mode: 'insensitive'}}
-                ]
-            }),
-            clientId: params.clientId
-        }
-
-        const [assets, total] = await Promise.all([
-            this.prisma.asset.findMany({
-                where,
-                skip: (params.page - 1) * params.limit,
-                take: params.limit
-            }),
-            this.prisma.asset.count({where})
-        ])
-
-        return {
-            assets,
-            total,
-            page: params.page
-        }
-    }
 }
