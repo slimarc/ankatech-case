@@ -15,19 +15,34 @@ export class PrismaClientRepository implements ClientRepository {
     }
 
     async create(data: CreateClient): Promise<ClientResponse> {
-        return this.prisma.client.create({
+        const client = await this.prisma.client.create({
             data: {
                 ...data,
             }
-        })
+        });
+        return {
+            id: client.id,
+            name: client.name,
+            email: client.email,
+            status: client.status,
+            portfolioId: null
+        };
     }
 
+
     async findById(params: FindClient): Promise<ClientResponse> {
-        return this.prisma.client.findUniqueOrThrow({
-            where: {
-                id: params.id
-            }
-        })
+        const client = await this.prisma.client.findUniqueOrThrow({
+            where: { id: params.id},
+            include: { portfolio: true }
+        });
+
+        return {
+            id: client.id,
+            name: client.name,
+            email: client.email,
+            status: client.status,
+            portfolioId: client.portfolio?.id ?? null
+        }
     }
 
     async findMany(params: FindClients): Promise<ClientsResponse> {
@@ -45,25 +60,42 @@ export class PrismaClientRepository implements ClientRepository {
             this.prisma.client.findMany({
                 where,
                 skip: (params.page - 1) * params.limit,
-                take: params.limit
+                take: params.limit,
+                include: { portfolio: true }
             }),
             this.prisma.client.count({where})
         ])
 
         return {
-            clients,
+            clients: clients.map(client => ({
+                id: client.id,
+                name: client.name,
+                email: client.email,
+                status: client.status,
+                portfolioId: client.portfolio?.id ?? null
+            })),
             total,
             page: params.page,
             limit: params.limit
-        }
+        };
     }
 
     async update(id: string, data: UpdateClient): Promise<ClientResponse> {
-        return this.prisma.client.update({
-            where: {id},
-            data
-        })
+        const client = await this.prisma.client.update({
+            where: { id },
+            data,
+            include: { portfolio: true }
+        });
+
+        return {
+            id: client.id,
+            name: client.name,
+            email: client.email,
+            status: client.status,
+            portfolioId: client.portfolio?.id ?? null
+        };
     }
+
 
     async delete(params: DeleteClient): Promise<void> {
         await this.prisma.client.delete({
