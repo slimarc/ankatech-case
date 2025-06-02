@@ -2,7 +2,7 @@ import {z} from 'zod'
 import { Decimal } from '@prisma/client/runtime/library';
 
 export const currencyStringInputSchema = z.string().nonempty()
-    .regex(/^\d+(\.\d{1,2})?$/, "Invalid value format.")
+    .regex(/^\d+(\.\d{1,2})?$/, "Invalid value format. Use up to 2 decimal places.")
     .transform(valStr => new Decimal(valStr))
     .refine(decimalVal => decimalVal.isPositive() && !decimalVal.isZero(), {
         message: "The current value must be a positive number and greater than zero."
@@ -34,7 +34,7 @@ export const deleteAssetSchema = z.object({
     id: z.string().uuid()
 })
 
-const decimalOutputSchema = z.custom<Decimal>(
+export const decimalOutputSchema = z.custom<Decimal>(
     (val) => val instanceof Decimal,
     "Invalid Decimal Value for Response")
     .refine(d => !d.isNaN() && d.isFinite(), "Decimal of answer must be a finite number");

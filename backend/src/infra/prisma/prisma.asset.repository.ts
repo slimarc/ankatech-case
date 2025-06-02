@@ -16,7 +16,7 @@ export class PrismaAssetRepository implements AssetRepository{
     }
 
     async create(data: CreateAsset): Promise<AssetResponse> {
-        const asset = await this.prisma.asset.create({ data })
+        const asset = await this.prisma.asset.create({data})
         return {
             id: asset.id,
             name: asset.name,
