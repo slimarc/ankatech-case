@@ -31,7 +31,7 @@ export const errorHandler = async (
                 });
             case 'P2002':
                 return reply.status(409).send({
-                    message: 'Email already exists'
+                    message: 'Field already exists'
                 });
             case 'P2003':
                 return reply.status(409).send({
