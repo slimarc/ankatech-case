@@ -43,7 +43,6 @@ export const portfolioResponseSchema = z.object({
     }))
 })
 
-
 export const portfoliosResponseSchema = z.object({
     portfolios: z.array(portfolioResponseSchema),
     total: z.number(),
