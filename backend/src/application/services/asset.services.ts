@@ -1,28 +1,19 @@
-import {AssetRepository} from "../../domain/assets/asset.repository";
+import {AssetRepository} from "@domain/asset/asset.repository";
 import {
     CreateAsset,
     AssetResponse,
     FindAsset,
     FindAssets,
     UpdateAsset,
+    AssetsResponse,
     DeleteAsset,
-    FindAssetsByClient,
-    AssetsByClientResponse,
-} from "../../domain/assets/asset.schemas";
+} from "@domain/asset/asset.schemas";
 
 export class AssetService {
     constructor(private readonly assetRepository: AssetRepository) {}
 
     async create(data: CreateAsset): Promise<AssetResponse>{
         return this.assetRepository.create(data)
-    }
-
-    async update(id: string, data: UpdateAsset): Promise<AssetResponse>{
-        return this.assetRepository.update(id, data)
-    }
-
-    async delete(params: DeleteAsset): Promise<void>{
-        await this.assetRepository.delete(params)
     }
 
     async findById(params: FindAsset): Promise<AssetResponse>{
@@ -33,8 +24,13 @@ export class AssetService {
         return this.assetRepository.findMany(params)
     }
 
-    async findManyByClientId(params: FindAssetsByClient): Promise<AssetsByClientResponse>{
-        return this.assetRepository.findManyByClientId(params)
+    async update(id: string, data: UpdateAsset): Promise<AssetResponse>{
+        return this.assetRepository.update(id, data)
     }
+
+    async delete(params: DeleteAsset): Promise<void>{
+        await this.assetRepository.delete(params)
+    }
+
 
 }
