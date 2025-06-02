@@ -1,20 +1,18 @@
 import {
-    CreatePortfolio,
+    DeletePortfolio,
     FindPortfolio,
     FindPortfolios,
-    PortfolioResponse, UpdatePortfolio
+    FindPortfolioByClientId,
+    PortfolioResponse,
+    PortfoliosResponse,
 } from "@domain/portfolio/portfolio.schemas";
 
 export interface PortfolioRepository {
-    create(data: CreatePortfolio): Promise<PortfolioResponse>
-
     findById(params: FindPortfolio): Promise<PortfolioResponse>
 
-    findMany(params: FindPortfolios): Promise<PortfolioResponse>
+    findByIdClient(params: FindPortfolioByClientId): Promise<PortfolioResponse>
 
-    findByIdClient(params: FindPortfolio): Promise<PortfolioResponse>
+    findMany(params: FindPortfolios): Promise<PortfoliosResponse>
 
-    update(id: string, data: UpdatePortfolio): Promise<PortfolioResponse>
-
-    delete(params: FindPortfolio): Promise<void>
+    delete(params: DeletePortfolio): Promise<void>
 }
