@@ -21,15 +21,12 @@ export class PrismaClientRepository implements ClientRepository {
             name: client.name,
             email: client.email,
             status: client.status,
-            portfolioId: null
         };
     }
 
-
     async findById(params: FindClient): Promise<ClientResponse> {
         const client = await this.prisma.client.findUniqueOrThrow({
-            where: { id: params.id},
-            include: { portfolio: true }
+            where: { id: params.id}
         });
 
         return {
@@ -37,7 +34,6 @@ export class PrismaClientRepository implements ClientRepository {
             name: client.name,
             email: client.email,
             status: client.status,
-            portfolioId: client.portfolio?.id ?? null
         }
     }
 
@@ -57,7 +53,6 @@ export class PrismaClientRepository implements ClientRepository {
                 where,
                 skip: (params.page - 1) * params.limit,
                 take: params.limit,
-                include: { portfolio: true }
             }),
             this.prisma.client.count({where})
         ])
@@ -68,7 +63,6 @@ export class PrismaClientRepository implements ClientRepository {
                 name: client.name,
                 email: client.email,
                 status: client.status,
-                portfolioId: client.portfolio?.id ?? null
             })),
             total,
             page: params.page,
@@ -79,8 +73,7 @@ export class PrismaClientRepository implements ClientRepository {
     async update(id: string, data: UpdateClient): Promise<ClientResponse> {
         const client = await this.prisma.client.update({
             where: { id },
-            data,
-            include: { portfolio: true }
+            data
         });
 
         return {
@@ -88,7 +81,6 @@ export class PrismaClientRepository implements ClientRepository {
             name: client.name,
             email: client.email,
             status: client.status,
-            portfolioId: client.portfolio?.id ?? null
         };
     }
 
