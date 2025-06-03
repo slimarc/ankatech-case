@@ -6,7 +6,7 @@ import {
     UpdateAssetHoldingQuantity,
     AssetHoldingResponse,
     AssetHoldingsResponse
-} from './asset-holding.schemas';
+} from '@domain/asset-holding/asset-holding.schemas';
 
 export interface AssetHoldingRepository {
     create(data: CreateAssetHolding): Promise<AssetHoldingResponse>;

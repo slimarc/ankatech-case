@@ -45,10 +45,10 @@ export const assetHoldingsResponseSchema = z.object({
     holdings: z.array(assetHoldingResponseSchema)
 })
 
-export type createAssetHolding = z.infer<typeof createAssetHoldingSchema>
-export type deleteAssetHolding = z.infer<typeof deleteAssetHoldingSchema>
+export type CreateAssetHolding = z.infer<typeof createAssetHoldingSchema>
 export type FindAssetHoldingById = z.infer<typeof findAssetHoldingByIdSchema>;
 export type FindAssetHoldingsByPortfolioId = z.infer<typeof findAssetHoldingsByPortfolioIdSchema>;
 export type UpdateAssetHoldingQuantity = z.infer<typeof updateAssetHoldingQuantitySchema>;
+export type DeleteAssetHolding = z.infer<typeof deleteAssetHoldingSchema>
 export type AssetHoldingResponse = z.infer<typeof assetHoldingResponseSchema>
 export type AssetHoldingsResponse = z.infer<typeof assetHoldingsResponseSchema>
