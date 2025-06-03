@@ -15,8 +15,7 @@ import {
 
 
 export class AssetController {
-    constructor(private readonly assetService: AssetService) {
-    }
+    constructor(private readonly assetService: AssetService) {}
 
     async create(request: FastifyRequest<{ Body: CreateAsset }>, reply: FastifyReply) {
         const data = createAssetSchema.parse(request.body)
