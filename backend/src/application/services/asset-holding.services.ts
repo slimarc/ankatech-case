@@ -2,7 +2,6 @@ import { AssetHoldingRepository } from '@domain/repository/asset-holding.reposit
 import { PortfolioRepository } from '@domain/repository/portfolio.repository'
 import { AssetRepository } from '@domain/repository/asset.repository'
 import {
-    DeleteAssetHolding,
     UpdateAssetHoldingQuantity,
     AssetHoldingResponse,
     CreateAssetHoldingInput,
@@ -75,14 +74,17 @@ export class AssetHoldingService {
 
         const newQuantity = new Decimal(params.quantity);
 
-        if (newQuantity.isZero() || newQuantity.isNegative()) {
-            await this.assetHoldingRepository.delete({ id: holding.id });
+        /* Para implementar lógica futura que exclui asset do portfolio quando a quantidade de cotas
+        *  atualizadas for igual a zero */
 
-            return {
-                ...holding,
-                quantity: '0.0000'
-            };
-        }
+        // if (newQuantity.isZero()) {
+        //     await this.assetHoldingRepository.delete({ id: holding.id });
+        //
+        //     return {
+        //         ...holding,
+        //         quantity: '0.0000'
+        //     };
+        // }
 
         return this.assetHoldingRepository.adjustAssetHolding({
             id: holding.id,
