@@ -1,6 +1,6 @@
 import {ClientRepository} from "@domain/client/client.repository";
 import { PortfolioRepository } from "@domain/portfolio/portfolio.repository";
-import { PortfolioResponse } from "@domain/portfolio/portfolio.schemas";
+import {PortfolioClientResponse, PortfolioResponse} from "@domain/portfolio/portfolio.schemas";
 import {
     ClientDetailResponse,
     ClientResponse,
@@ -11,7 +11,7 @@ import {
     FindClients,
     UpdateClient
 } from "@domain/client/client.schemas";
-import {NotFoundError} from "@core/erros/NotFoundError";
+import {NotFoundError} from "@core/errors/NotFoundError";
 
 
 export class ClientService {
@@ -26,31 +26,41 @@ export class ClientService {
         return this.clientRepository.update(id, data)
     }
 
-    async delete(params: DeleteClient): Promise<void> {
-        await this.clientRepository.delete(params)
+    async delete(params: FindClient): Promise<void> {
+        const portfolio = await this.portfolioRepository.findByClientId({ clientId: params.id });
+
+        if (portfolio) {
+            const hasHoldings = portfolio.assets.length > 0;
+            if (hasHoldings) {
+                throw new NotFoundError('Client has assets in portfolio. Delete holdings first.');
+            }
+        }
+
+        await this.clientRepository.delete(params);
     }
 
-    async findById(params: FindClient): Promise<ClientDetailResponse> {
-        const clientData = await this.clientRepository.findById(params);
 
-        let portfolioResponse: PortfolioResponse | null = null;
+    async findById(params: FindClient): Promise<ClientDetailResponse> {
+        const client = await this.clientRepository.findById(params);
+
+        let portfolioClientResponse: PortfolioClientResponse | null = null;
 
         try {
-            portfolioResponse = await this.portfolioRepository.findByClientId({ clientId: clientData.id });
+            portfolioClientResponse = await this.portfolioRepository.findByClientId({ clientId: client.id });
         } catch (error) {
             if (error instanceof NotFoundError) {
-                portfolioResponse = null;
+                portfolioClientResponse = null;
             } else {
                 throw error;
             }
         }
 
         return {
-            id: clientData.id,
-            name: clientData.name,
-            email: clientData.email,
-            status: clientData.status,
-            portfolio: portfolioResponse,
+            id: client.id,
+            name: client.name,
+            email: client.email,
+            status: client.status,
+            portfolio: portfolioClientResponse,
         };
     }
 

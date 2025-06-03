@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {portfolioResponseSchema} from "@domain/portfolio/portfolio.schemas";
+import {portfolioClientResponseSchema} from "@domain/portfolio/portfolio.schemas";
 
 export const clientStatusSchema = z.enum(['ACTIVE', 'INACTIVE'])
 
@@ -44,7 +44,7 @@ export const clientsResponseSchema = z.object({
 })
 
 export const clientDetailResponseSchema = clientResponseSchema.extend({
-    portfolio: portfolioResponseSchema.nullable()
+    portfolio: portfolioClientResponseSchema.nullable()
 });
 
 

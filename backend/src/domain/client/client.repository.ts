@@ -1,4 +1,5 @@
 import {
+    ClientDetailResponse,
     ClientResponse,
     ClientsResponse,
     CreateClient,
@@ -12,7 +13,7 @@ import {
 export interface ClientRepository {
     create(data: CreateClient): Promise<ClientResponse>
 
-    findById(params: FindClient): Promise<ClientResponse>
+    findById(params: FindClient): Promise<ClientDetailResponse>
 
     findMany(params: FindClients): Promise<ClientsResponse>
 

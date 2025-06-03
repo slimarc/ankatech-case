@@ -1,5 +1,5 @@
 import {FastifyReply, FastifyRequest} from 'fastify'
-import {ClientService} from "../../../application/services/client.services";
+import {ClientService} from "@application/services/client.services";
 import {
     CreateClient,
     createClientSchema,
@@ -11,7 +11,7 @@ import {
     findClientsSchema,
     UpdateClient,
     updateClientSchema
-} from "../../../domain/client/client.schemas";
+} from "@domain/client/client.schemas";
 
 export class ClientController {
     constructor(private readonly clientService: ClientService) {
@@ -45,10 +45,7 @@ export class ClientController {
         return reply.send(portfolio);
     }
 
-    async update(
-        request: FastifyRequest<{ Params: FindClient; Body: UpdateClient }>,
-        reply: FastifyReply
-    ) {
+    async update(request: FastifyRequest<{ Params: FindClient; Body: UpdateClient }>, reply: FastifyReply) {
         const {id} = findClientSchema.parse(request.params)
         const data = updateClientSchema.parse(request.body)
         const client = await this.clientService.update(id, data)
