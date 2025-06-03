@@ -1,6 +1,7 @@
 import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import {NotFoundError} from "@core/erros/NotFoundError";
 
 
 export const errorHandler = async (
@@ -20,6 +21,12 @@ export const errorHandler = async (
         return reply.status(400).send({
             message: 'Validation error',
             errors: error.flatten().fieldErrors
+        });
+    }
+
+    if (error instanceof NotFoundError) {
+        return reply.status(error.statusCode).send({
+            message: error.message
         });
     }
 
