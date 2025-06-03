@@ -10,7 +10,7 @@ import {
 export interface PortfolioRepository {
     findById(params: FindPortfolio): Promise<PortfolioResponse>
 
-    findByIdClient(params: FindPortfolioByClientId): Promise<PortfolioResponse>
+    findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse>
 
     findMany(params: FindPortfolios): Promise<PortfoliosResponse>
 
