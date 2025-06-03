@@ -40,8 +40,11 @@ model AssetHolding {
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   asset       Asset     @relation(fields: [assetId], references: [id])
 
+  acquiredAt  DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
   @@unique([portfolioId, assetId])
-  @@map("portfolio_assets")
+  @@map("asset_holdings")
 }
 
 model Asset {
