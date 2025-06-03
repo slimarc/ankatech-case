@@ -5,15 +5,18 @@ import {
     FindAssetHoldingsByPortfolioId,
     UpdateAssetHoldingQuantity,
     AssetHoldingResponse,
-    AssetHoldingsResponse
+    AssetHoldingsResponse,
+    FindByPortfolioAndAsset
 } from '@domain/asset-holding/asset-holding.schemas';
 
 export interface AssetHoldingRepository {
     create(data: CreateAssetHolding): Promise<AssetHoldingResponse>;
 
-    findById(params: FindAssetHoldingById): Promise<AssetHoldingResponse | null>;
+    findById(params: FindAssetHoldingById): Promise<AssetHoldingResponse>;
 
     findByPortfolioId(params: FindAssetHoldingsByPortfolioId): Promise<AssetHoldingsResponse>;
+
+    findByPortfolioAndAsset(params: FindByPortfolioAndAsset): Promise<AssetHoldingResponse | null>;
 
     updateQuantity(params: UpdateAssetHoldingQuantity): Promise<AssetHoldingResponse>;
 
