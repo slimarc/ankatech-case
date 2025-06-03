@@ -23,7 +23,19 @@ export class ClientService {
     }
 
     async update(id: string, data: UpdateClient): Promise<ClientResponse> {
-        return this.clientRepository.update(id, data)
+        const client = await this.clientRepository.findById({ id });
+        if (!client) throw new NotFoundError('Client not found');
+
+        if (data.status === 'INACTIVE') {
+            const portfolio = await this.portfolioRepository.findByClientId({ clientId: id });
+
+            const hasAssets = portfolio ? portfolio.assets.length > 0 : false;
+
+            if (hasAssets) {
+                throw new NotFoundError('Cannot inactivate client with assets in portfolio');
+            }
+        }
+        return this.clientRepository.update(id, data);
     }
 
     async delete(params: FindClient): Promise<void> {
@@ -38,7 +50,6 @@ export class ClientService {
 
         await this.clientRepository.delete(params);
     }
-
 
     async findById(params: FindClient): Promise<ClientDetailResponse> {
         const client = await this.clientRepository.findById(params);
