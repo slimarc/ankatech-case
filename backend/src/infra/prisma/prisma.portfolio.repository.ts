@@ -7,11 +7,45 @@ import {
     FindPortfolioByClientId,
     PortfolioResponse,
     PortfoliosResponse,
+    CreatePortfolio,
 } from "@domain/portfolio/portfolio.schemas";
 
 export class PrismaPortfolioRepository implements PortfolioRepository {
     constructor(private readonly prisma: PrismaClient) {
     }
+
+    async create(data: { clientId: string }): Promise<PortfolioResponse> {
+        const portfolio = await this.prisma.portfolio.create({
+            data: {
+                clientId: data.clientId,
+            },
+            include: {
+                client: true,
+                assets: {
+                    include: {
+                        asset: true,
+                    }
+                }
+            }
+        });
+
+        return {
+            id: portfolio.id,
+            client: {
+                id: portfolio.client.id,
+                status: portfolio.client.status,
+                name: portfolio.client.name,
+                email: portfolio.client.email,
+            },
+            assets: portfolio.assets.map(assetHolding => ({
+                id: assetHolding.asset.id,
+                name: assetHolding.asset.name,
+                currentValue: assetHolding.asset.currentValue.toFixed(2),
+                quantity: assetHolding.quantity.toFixed(4)
+            })),
+        };
+    }
+
 
     async findById(params: FindPortfolio): Promise<PortfolioResponse> {
         const portfolio = await this.prisma.portfolio.findUniqueOrThrow({
@@ -37,15 +71,15 @@ export class PrismaPortfolioRepository implements PortfolioRepository {
             assets: portfolio.assets.map(pa => ({
                 id: pa.asset.id,
                 name: pa.asset.name,
-                currentValue: pa.asset.currentValue.toString(),
-                quantity: pa.quantity.toString()
+                currentValue: pa.asset.currentValue.toFixed(2),
+                quantity: pa.quantity.toFixed(4)
             }))
         };
     }
 
 
-    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse> {
-        const portfolio = await this.prisma.portfolio.findFirstOrThrow({
+    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse | null> {
+        const portfolio = await this.prisma.portfolio.findFirst({
             where: {
                 clientId: params.clientId
             },
@@ -58,6 +92,8 @@ export class PrismaPortfolioRepository implements PortfolioRepository {
                 }
             }
         });
+
+        if (!portfolio) return null;
 
         return {
             id: portfolio.id,

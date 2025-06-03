@@ -5,12 +5,15 @@ import {
     FindPortfolioByClientId,
     PortfolioResponse,
     PortfoliosResponse,
+    CreatePortfolio,
 } from "@domain/portfolio/portfolio.schemas";
 
 export interface PortfolioRepository {
+    create(params: CreatePortfolio): Promise<PortfolioResponse>
+
     findById(params: FindPortfolio): Promise<PortfolioResponse>
 
-    findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse>
+    findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse | null>
 
     findMany(params: FindPortfolios): Promise<PortfoliosResponse>
 

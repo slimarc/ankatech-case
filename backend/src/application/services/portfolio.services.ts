@@ -7,6 +7,7 @@ import {
     PortfolioResponse,
     PortfoliosResponse,
 } from "@domain/portfolio/portfolio.schemas";
+import {NotFoundError} from "@core/errors/NotFoundError";
 
 export class PortfolioService {
     constructor(private readonly portfolioRepository: PortfolioRepository) {}
@@ -15,7 +16,7 @@ export class PortfolioService {
         return this.portfolioRepository.findById(params)
     }
 
-    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse>{
+    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse | null>{
         return this.portfolioRepository.findByClientId(params)
     }
 
@@ -24,6 +25,13 @@ export class PortfolioService {
     }
 
     async delete(params: DeletePortfolio): Promise<void> {
-        await this.portfolioRepository.delete(params)
+        const portfolio = await this.portfolioRepository.findById(params);
+
+        const hasHoldings = portfolio.assets.length > 0;
+        if (hasHoldings) {
+            throw new NotFoundError('Portfolio has asset holdings. Delete holdings first.');
+        }
+
+        await this.portfolioRepository.delete(params);
     }
 }

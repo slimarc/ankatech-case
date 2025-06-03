@@ -22,6 +22,16 @@ export const deletePortfolioSchema = z.object({
     id: z.string().uuid()
 })
 
+export const portfolioClientResponseSchema = z.object({
+    id: z.string().uuid(),
+    assets: z.array(z.object({
+        id: z.string().uuid(),
+        name: z.string(),
+        currentValue: decimalOutputSchema.transform(decimalVal => decimalVal.toFixed(2)),
+        quantity: decimalOutputSchema.transform(decimalVal => decimalVal.toFixed(4))
+    }))
+})
+
 export const portfolioResponseSchema = z.object({
     id: z.string().uuid(),
     client: z.object({
@@ -48,6 +58,7 @@ export const portfoliosResponseSchema = z.object({
 export type CreatePortfolio = z.infer<typeof createPortfolioSchema>
 export type PortfolioResponse = z.infer<typeof portfolioResponseSchema>
 export type PortfoliosResponse = z.infer<typeof portfoliosResponseSchema>
+export type PortfolioClientResponse = z.infer<typeof portfolioClientResponseSchema>
 export type FindPortfolio = z.infer<typeof findPortfolioSchema>
 export type FindPortfolios = z.infer<typeof findPortfoliosSchema>
 export type FindPortfolioByClientId = z.infer<typeof findPortfolioByClientIdSchema>
