@@ -3,10 +3,8 @@ import {
     CreateAssetHolding,
     DeleteAssetHolding,
     FindAssetHoldingById,
-    FindAssetHoldingsByPortfolioId,
     UpdateAssetHoldingQuantity,
     AssetHoldingResponse,
-    AssetHoldingsResponse
 } from '@domain/asset-holding/asset-holding.schemas';
 import { AssetHoldingRepository } from '@domain/asset-holding/asset-holding.repository';
 
@@ -17,6 +15,8 @@ export class PrismaAssetHoldingRepository implements AssetHoldingRepository {
     ): AssetHoldingResponse {
         return {
             id: assetHolding.id,
+            portfolioId: assetHolding.portfolioId,
+            assetId: assetHolding.id,
             name: assetHolding.asset.name,
             currentValue: assetHolding.asset.currentValue.toString(),
             quantity: assetHolding.quantity.toString(),
@@ -47,37 +47,6 @@ export class PrismaAssetHoldingRepository implements AssetHoldingRepository {
         return this.mapToAssetHoldingResponse(assetHolding);
     }
 
-    async findByPortfolioId(params: FindAssetHoldingsByPortfolioId): Promise<AssetHoldingsResponse> {
-        const whereClause: Prisma.AssetHoldingWhereInput = { portfolioId: params.portfolioId };
-        const page = params.page ?? 1;
-        const limit = params.limit ?? 10;
-        const skip = (page - 1) * limit;
-
-        const [assetHoldingsData, total] = await this.prisma.$transaction([
-            this.prisma.assetHolding.findMany({
-                where: whereClause,
-                include: {
-                    asset: true,
-                },
-                skip: skip,
-                take: limit,
-                orderBy: {
-                    acquiredAt: 'desc'
-                }
-            }),
-            this.prisma.assetHolding.count({
-                where: whereClause,
-            }),
-        ]);
-
-        return {
-            holdings: assetHoldingsData.map(this.mapToAssetHoldingResponse),
-            total,
-            page,
-            limit,
-        };
-    }
-
     async findByPortfolioAndAsset(params: { portfolioId: string; assetId: string }): Promise<AssetHoldingResponse | null> {
         const holding = await this.prisma.assetHolding.findFirst({
             where: {
@@ -93,7 +62,6 @@ export class PrismaAssetHoldingRepository implements AssetHoldingRepository {
 
         return this.mapToAssetHoldingResponse(holding);
     }
-
 
     async updateQuantity(params: UpdateAssetHoldingQuantity): Promise<AssetHoldingResponse> {
         const updatedAssetHolding = await this.prisma.assetHolding.update({
