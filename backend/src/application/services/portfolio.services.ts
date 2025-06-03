@@ -15,8 +15,8 @@ export class PortfolioService {
         return this.portfolioRepository.findById(params)
     }
 
-    async findByIdClient(params: FindPortfolioByClientId): Promise<PortfolioResponse>{
-        return this.portfolioRepository.findByIdClient(params)
+    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse>{
+        return this.portfolioRepository.findByClientId(params)
     }
 
     async findMany(params: FindPortfolios): Promise<PortfoliosResponse> {

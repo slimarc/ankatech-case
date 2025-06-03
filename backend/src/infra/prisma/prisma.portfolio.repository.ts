@@ -44,7 +44,7 @@ export class PrismaPortfolioRepository implements PortfolioRepository {
     }
 
 
-    async findByIdClient(params: FindPortfolioByClientId): Promise<PortfolioResponse> {
+    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse> {
         const portfolio = await this.prisma.portfolio.findFirstOrThrow({
             where: {
                 clientId: params.clientId
