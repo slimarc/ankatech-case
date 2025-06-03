@@ -1,7 +1,7 @@
 import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import {NotFoundError} from "@core/erros/NotFoundError";
+import {NotFoundError} from "@core/errors/NotFoundError";
 
 
 export const errorHandler = async (
