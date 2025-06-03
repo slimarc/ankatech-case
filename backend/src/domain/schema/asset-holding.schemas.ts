@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import {decimalOutputSchema} from "@domain/asset/asset.schemas";
+import {decimalOutputSchema} from "@domain/schema/asset.schemas";
 import { Decimal } from '@prisma/client/runtime/library'
 
 export const quantityStringInputSchema = z.string().nonempty()
@@ -31,7 +31,8 @@ export const findByPortfolioAndAssetSchema = z.object({
 });
 
 export const updateAssetHoldingQuantitySchema = z.object({
-    id: z.string().uuid(),
+    portfolioId: z.string().uuid(),
+    assetId: z.string().uuid(),
     quantity: quantityStringInputSchema
 });
 

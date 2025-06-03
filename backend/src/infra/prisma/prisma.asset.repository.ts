@@ -7,8 +7,8 @@ import {
     FindAssets,
     UpdateAsset,
     DeleteAsset,
-} from "@domain/asset/asset.schemas";
-import {AssetRepository} from "@domain/asset/asset.repository";
+} from "@domain/schema/asset.schemas";
+import {AssetRepository} from "@domain/repository/asset.repository";
 
 
 export class PrismaAssetRepository implements AssetRepository{

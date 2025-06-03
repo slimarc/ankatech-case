@@ -11,7 +11,7 @@ import {
     findClientsSchema,
     UpdateClient,
     updateClientSchema
-} from "@domain/client/client.schemas";
+} from "@domain/schema/client.schemas";
 
 export class ClientController {
     constructor(private readonly clientService: ClientService) {

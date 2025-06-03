@@ -1,6 +1,6 @@
-import {ClientRepository} from "@domain/client/client.repository";
-import { PortfolioRepository } from "@domain/portfolio/portfolio.repository";
-import {PortfolioClientResponse, PortfolioResponse} from "@domain/portfolio/portfolio.schemas";
+import {ClientRepository} from "@domain/repository/client.repository";
+import { PortfolioRepository } from "@domain/repository/portfolio.repository";
+import {PortfolioClientResponse, PortfolioResponse} from "@domain/schema/portfolio.schemas";
 import {
     ClientDetailResponse,
     ClientResponse,
@@ -10,7 +10,7 @@ import {
     FindClient,
     FindClients,
     UpdateClient
-} from "@domain/client/client.schemas";
+} from "@domain/schema/client.schemas";
 import {NotFoundError} from "@core/errors/NotFoundError";
 
 

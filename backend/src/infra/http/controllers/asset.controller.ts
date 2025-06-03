@@ -11,7 +11,7 @@ import {
     findAssetsSchema,
     UpdateAsset,
     updateAssetSchema
-} from "@domain/asset/asset.schemas";
+} from "@domain/schema/asset.schemas";
 
 
 export class AssetController {

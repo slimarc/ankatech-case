@@ -2,10 +2,10 @@ import {
     CreateAssetHolding,
     DeleteAssetHolding,
     FindAssetHoldingById,
-    UpdateAssetHoldingQuantity,
     AssetHoldingResponse,
     FindByPortfolioAndAsset
-} from '@domain/asset-holding/asset-holding.schemas';
+} from '@domain/schema/asset-holding.schemas';
+import {Decimal} from "@prisma/client/runtime/library";
 
 export interface AssetHoldingRepository {
     create(data: CreateAssetHolding): Promise<AssetHoldingResponse>;
@@ -14,7 +14,7 @@ export interface AssetHoldingRepository {
 
     findByPortfolioAndAsset(params: FindByPortfolioAndAsset): Promise<AssetHoldingResponse | null>;
 
-    updateQuantity(params: UpdateAssetHoldingQuantity): Promise<AssetHoldingResponse>;
+    adjustAssetHolding(params: { id: string; quantity: Decimal }): Promise<AssetHoldingResponse>;
 
     delete(params: DeleteAssetHolding): Promise<void>;
 }

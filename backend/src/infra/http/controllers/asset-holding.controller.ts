@@ -1,15 +1,13 @@
-import Fastify, {FastifyInstance, FastifyReply, FastifyRequest} from 'fastify';
+import { FastifyReply, FastifyRequest} from 'fastify';
 import {AssetHoldingService} from "@application/services/asset-holding.services";
 import {
     CreateAssetHoldingInput,
     createAssetHoldingInputSchema,
-    DeleteAssetHolding,
-    deleteAssetHoldingSchema,
     FindAssetHoldingById,
     findAssetHoldingByIdSchema,
     UpdateAssetHoldingQuantity,
     updateAssetHoldingQuantitySchema
-} from "@domain/asset-holding/asset-holding.schemas";
+} from "@domain/schema/asset-holding.schemas";
 
 export class AssetHoldingController {
     constructor(private readonly assetHoldingService: AssetHoldingService) {
@@ -27,19 +25,16 @@ export class AssetHoldingController {
         return reply.send(holding);
     }
 
-    async updateQuantity(
-        request: FastifyRequest<{ Params: FindAssetHoldingById, Body: UpdateAssetHoldingQuantity }>, reply: FastifyReply ) {
-        const {id} = findAssetHoldingByIdSchema.parse(request.params)
-        const data = updateAssetHoldingQuantitySchema.parse(request.body)
-        const holding = await this.assetHoldingService.updateQuantity(id, data);
+    async adjustAssetHolding(request: FastifyRequest<{ Body: UpdateAssetHoldingQuantity }>, reply: FastifyReply) {
+        const data = updateAssetHoldingQuantitySchema.parse(request.body);
+
+        const holding = await this.assetHoldingService.adjustAssetHolding(data);
+
         return reply.send(holding);
     }
 
-    async delete(request: FastifyRequest<{ Params: DeleteAssetHolding }>, reply: FastifyReply) {
-        const params = deleteAssetHoldingSchema.parse(request.params);
-        await this.assetHoldingService.delete(params);
-        return reply.status(204).send();
-    }
+
+
 }
 
 

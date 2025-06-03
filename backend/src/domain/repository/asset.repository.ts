@@ -6,7 +6,7 @@ import {
     FindAsset,
     FindAssets,
     UpdateAsset
-} from "./asset.schemas";
+} from "../schema/asset.schemas";
 
 export interface AssetRepository {
     create(data: CreateAsset): Promise<AssetResponse>

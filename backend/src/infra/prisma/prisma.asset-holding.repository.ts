@@ -3,10 +3,10 @@ import {
     CreateAssetHolding,
     DeleteAssetHolding,
     FindAssetHoldingById,
-    UpdateAssetHoldingQuantity,
     AssetHoldingResponse,
-} from '@domain/asset-holding/asset-holding.schemas';
-import { AssetHoldingRepository } from '@domain/asset-holding/asset-holding.repository';
+} from '@domain/schema/asset-holding.schemas';
+import { AssetHoldingRepository } from '@domain/repository/asset-holding.repository';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export class PrismaAssetHoldingRepository implements AssetHoldingRepository {
     constructor(private readonly prisma: PrismaClient) {}
@@ -51,11 +51,11 @@ export class PrismaAssetHoldingRepository implements AssetHoldingRepository {
         const holding = await this.prisma.assetHolding.findFirst({
             where: {
                 portfolioId: params.portfolioId,
-                assetId: params.assetId,
+                assetId: params.assetId
             },
             include: {
-                asset: true,
-            },
+                asset: true
+            }
         });
 
         if (!holding) return null;
@@ -63,18 +63,16 @@ export class PrismaAssetHoldingRepository implements AssetHoldingRepository {
         return this.mapToAssetHoldingResponse(holding);
     }
 
-    async updateQuantity(params: UpdateAssetHoldingQuantity): Promise<AssetHoldingResponse> {
-        const updatedAssetHolding = await this.prisma.assetHolding.update({
+    async adjustAssetHolding(params: { id: string; quantity: Decimal }): Promise<AssetHoldingResponse> {
+        const updated = await this.prisma.assetHolding.update({
             where: { id: params.id },
-            data: {
-                quantity: params.quantity,
-            },
-            include: {
-                asset: true,
-            },
+            data: { quantity: params.quantity },
+            include: { asset: true }
         });
-        return this.mapToAssetHoldingResponse(updatedAssetHolding);
+
+        return this.mapToAssetHoldingResponse(updated);
     }
+
 
     async delete(params: DeleteAssetHolding): Promise<void> {
         await this.prisma.assetHolding.delete({

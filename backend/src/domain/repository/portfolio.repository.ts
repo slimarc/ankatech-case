@@ -6,7 +6,7 @@ import {
     PortfolioResponse,
     PortfoliosResponse,
     CreatePortfolio,
-} from "@domain/portfolio/portfolio.schemas";
+} from "@domain/schema/portfolio.schemas";
 
 export interface PortfolioRepository {
     create(params: CreatePortfolio): Promise<PortfolioResponse>

@@ -8,7 +8,7 @@ import {
     findPortfolioByClientIdSchema,
     DeletePortfolio,
     deletePortfolioSchema
-} from "@domain/portfolio/portfolio.schemas";
+} from "@domain/schema/portfolio.schemas";
 import {FastifyReply, FastifyRequest} from "fastify";
 
 export class PortfolioController {

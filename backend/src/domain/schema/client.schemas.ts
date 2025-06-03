@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {portfolioClientResponseSchema} from "@domain/portfolio/portfolio.schemas";
+import {portfolioClientResponseSchema} from "@domain/schema/portfolio.schemas";
 
 export const clientStatusSchema = z.enum(['ACTIVE', 'INACTIVE'])
 

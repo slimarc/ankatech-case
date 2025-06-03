@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {decimalOutputSchema} from "@domain/asset/asset.schemas";
+import {decimalOutputSchema} from "@domain/schema/asset.schemas";
 
 export const createPortfolioSchema = z.object({
     clientId: z.string().uuid()

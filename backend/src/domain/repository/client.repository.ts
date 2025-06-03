@@ -7,7 +7,7 @@ import {
     FindClient,
     FindClients,
     UpdateClient
-} from "./client.schemas";
+} from "../schema/client.schemas";
 
 
 export interface ClientRepository {

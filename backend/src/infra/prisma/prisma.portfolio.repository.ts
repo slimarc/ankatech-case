@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {PortfolioRepository} from "@domain/portfolio/portfolio.repository";
+import {PortfolioRepository} from "@domain/repository/portfolio.repository";
 import {
     DeletePortfolio,
     FindPortfolio,
@@ -8,7 +8,7 @@ import {
     PortfolioResponse,
     PortfoliosResponse,
     CreatePortfolio,
-} from "@domain/portfolio/portfolio.schemas";
+} from "@domain/schema/portfolio.schemas";
 
 export class PrismaPortfolioRepository implements PortfolioRepository {
     constructor(private readonly prisma: PrismaClient) {

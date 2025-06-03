@@ -16,13 +16,8 @@ export const assetHoldingRoutes = (fastify: FastifyInstance, controller: AssetHo
 
     fastify.route({
         method: 'PATCH',
-        url: '/asset-holdings/:id',
-        handler: controller.updateQuantity.bind(controller)
+        url: '/asset-holdings',
+        handler: controller.adjustAssetHolding.bind(controller)
     });
 
-    fastify.route({
-        method: 'DELETE',
-        url: '/asset-holdings/:id',
-        handler: controller.delete.bind(controller)
-    });
 };

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import {ClientRepository} from "@domain/client/client.repository";
+import {ClientRepository} from "@domain/repository/client.repository";
 import {
     ClientDetailResponse,
     ClientResponse,
@@ -9,7 +9,7 @@ import {
     FindClient,
     FindClients,
     UpdateClient
-} from "@domain/client/client.schemas";
+} from "@domain/schema/client.schemas";
 
 export class PrismaClientRepository implements ClientRepository {
     constructor(private readonly prisma: PrismaClient) {

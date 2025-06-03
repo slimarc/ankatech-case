@@ -1,4 +1,4 @@
-import {AssetRepository} from "@domain/asset/asset.repository";
+import {AssetRepository} from "@domain/repository/asset.repository";
 import {
     CreateAsset,
     AssetResponse,
@@ -7,7 +7,7 @@ import {
     UpdateAsset,
     AssetsResponse,
     DeleteAsset,
-} from "@domain/asset/asset.schemas";
+} from "@domain/schema/asset.schemas";
 
 export class AssetService {
     constructor(private readonly assetRepository: AssetRepository) {}

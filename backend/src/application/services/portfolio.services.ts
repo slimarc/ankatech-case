@@ -1,4 +1,4 @@
-import {PortfolioRepository} from "@domain/portfolio/portfolio.repository";
+import {PortfolioRepository} from "@domain/repository/portfolio.repository";
 import {
     DeletePortfolio,
     FindPortfolio,
@@ -6,7 +6,7 @@ import {
     FindPortfolioByClientId,
     PortfolioResponse,
     PortfoliosResponse,
-} from "@domain/portfolio/portfolio.schemas";
+} from "@domain/schema/portfolio.schemas";
 import {NotFoundError} from "@core/errors/NotFoundError";
 
 export class PortfolioService {

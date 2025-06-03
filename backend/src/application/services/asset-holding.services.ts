@@ -1,6 +1,6 @@
-import { AssetHoldingRepository } from '@domain/asset-holding/asset-holding.repository'
-import { PortfolioRepository } from '@domain/portfolio/portfolio.repository'
-import { AssetRepository } from '@domain/asset/asset.repository'
+import { AssetHoldingRepository } from '@domain/repository/asset-holding.repository'
+import { PortfolioRepository } from '@domain/repository/portfolio.repository'
+import { AssetRepository } from '@domain/repository/asset.repository'
 import {
     DeleteAssetHolding,
     UpdateAssetHoldingQuantity,
@@ -8,7 +8,7 @@ import {
     CreateAssetHoldingInput,
     CreateAssetHolding,
     FindAssetHoldingById,
-} from '@domain/asset-holding/asset-holding.schemas'
+} from '@domain/schema/asset-holding.schemas'
 import { NotFoundError } from '@core/errors/NotFoundError'
 import { Decimal } from '@prisma/client/runtime/library'
 
@@ -52,7 +52,7 @@ export class AssetHoldingService {
                     quantity: '0.0000'
                 };
             }
-            return this.assetHoldingRepository.updateQuantity({
+            return this.assetHoldingRepository.adjustAssetHolding({
                 id: existingHolding.id,
                 quantity: newQuantity
             });
@@ -65,30 +65,28 @@ export class AssetHoldingService {
         return this.assetHoldingRepository.findById({ id: params.id });
     }
 
-    async updateQuantity(id: string, params: UpdateAssetHoldingQuantity): Promise<AssetHoldingResponse> {
-        const holding = await this.assetHoldingRepository.findById({ id })
-        if (!holding) throw new NotFoundError('Asset holding not found')
+    async adjustAssetHolding(params: UpdateAssetHoldingQuantity): Promise<AssetHoldingResponse> {
+        const holding = await this.assetHoldingRepository.findByPortfolioAndAsset({
+            portfolioId: params.portfolioId,
+            assetId: params.assetId
+        });
 
-        const newQuantity = new Decimal(params.quantity)
+        if (!holding) throw new NotFoundError('Asset holding not found');
+
+        const newQuantity = new Decimal(params.quantity);
+
         if (newQuantity.isZero() || newQuantity.isNegative()) {
-            await this.assetHoldingRepository.delete({ id: params.id })
+            await this.assetHoldingRepository.delete({ id: holding.id });
+
             return {
-                id: holding.id,
-                portfolioId: holding.portfolioId,
-                assetId: holding.assetId,
-                name: holding.name,
-                currentValue: holding.currentValue,
+                ...holding,
                 quantity: '0.0000'
-            }
+            };
         }
 
-        return this.assetHoldingRepository.updateQuantity({
-            id: params.id,
+        return this.assetHoldingRepository.adjustAssetHolding({
+            id: holding.id,
             quantity: newQuantity
-        })
-    }
-
-    async delete(params: DeleteAssetHolding): Promise<void> {
-        return this.assetHoldingRepository.delete(params)
+        });
     }
 }
