@@ -44,7 +44,7 @@ export const clientsResponseSchema = z.object({
 })
 
 export const clientDetailResponseSchema = clientResponseSchema.extend({
-    portfolio: portfolioClientResponseSchema.nullable()
+    portfolio: z.union([portfolioClientResponseSchema, z.string(), z.null()]),
 });
 
 

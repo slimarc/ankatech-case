@@ -1,12 +1,10 @@
 import {ClientRepository} from "@domain/repository/client.repository";
 import { PortfolioRepository } from "@domain/repository/portfolio.repository";
-import {PortfolioClientResponse, PortfolioResponse} from "@domain/schema/portfolio.schemas";
 import {
     ClientDetailResponse,
     ClientResponse,
     ClientsResponse,
     CreateClient,
-    DeleteClient,
     FindClient,
     FindClients,
     UpdateClient
@@ -54,49 +52,20 @@ export class ClientService {
     async findById(params: FindClient): Promise<ClientDetailResponse> {
         const client = await this.clientRepository.findById(params);
 
-        let portfolioClientResponse: PortfolioClientResponse | null = null;
-
-        try {
-            portfolioClientResponse = await this.portfolioRepository.findByClientId({ clientId: client.id });
-        } catch (error) {
-            if (error instanceof NotFoundError) {
-                portfolioClientResponse = null;
-            } else {
-                throw error;
-            }
-        }
+        const portfolioClientResponse = await this.portfolioRepository.findByClientId({ clientId: client.id });
+        const dataPortfolioClientResponse = portfolioClientResponse ? portfolioClientResponse : "The client does not yet have investments";
 
         return {
             id: client.id,
             name: client.name,
             email: client.email,
             status: client.status,
-            portfolio: portfolioClientResponse,
+            portfolio: dataPortfolioClientResponse,
         };
     }
 
     async findMany(params: FindClients): Promise<ClientsResponse> {
         return this.clientRepository.findMany(params)
-    }
-
-    async getPortfolioByClientId(params: { clientId: string }): Promise<PortfolioResponse | null> {
-        try {
-            await this.clientRepository.findById({ id: params.clientId });
-        } catch (error) {
-            if (error instanceof NotFoundError) {
-                throw new NotFoundError(`Client with id ${params.clientId} not found.`);
-            }
-            throw error;
-        }
-
-        try {
-            return await this.portfolioRepository.findByClientId({ clientId: params.clientId });
-        } catch (error) {
-            if (error instanceof NotFoundError) {
-                return null;
-            }
-            throw error;
-        }
     }
 
 }

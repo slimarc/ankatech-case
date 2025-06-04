@@ -21,12 +21,6 @@ export const clientRoutes = (fastify: FastifyInstance, controller: ClientControl
     })
 
     fastify.route({
-        method: 'GET',
-        url: '/clients/:id/portfolio',
-        handler: controller.getClientPortfolio.bind(controller)
-    })
-
-    fastify.route({
         method: 'PATCH',
         url: '/clients/:id',
         handler: controller.update.bind(controller)
