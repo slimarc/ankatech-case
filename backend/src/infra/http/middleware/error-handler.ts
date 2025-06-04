@@ -1,4 +1,4 @@
-import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import {NotFoundError} from "@core/errors/NotFoundError";
