@@ -29,20 +29,10 @@ export class ClientController {
         return reply.send(client)
     }
 
-    async findMany(request: FastifyRequest<{ Querystring: FindClients }>, reply: FastifyReply) {
-        const params = findClientsSchema.parse(request.query)
+    async findMany(request: FastifyRequest<{ Params: FindClients }>, reply: FastifyReply) {
+        const params = findClientsSchema.parse(request.params)
         const clients = await this.clientService.findMany(params)
         return reply.send(clients)
-    }
-
-    async getClientPortfolio( request: FastifyRequest<{ Params: { clientId: string } }>, reply: FastifyReply) {
-        const { clientId } = request.params;
-        const portfolio = await this.clientService.getPortfolioByClientId({ clientId });
-
-        if (portfolio === null) {
-            return reply.status(404).send({ message: 'Portfolio not found for this client or client does not exist.' });
-        }
-        return reply.send(portfolio);
     }
 
     async update(request: FastifyRequest<{ Params: FindClient; Body: UpdateClient }>, reply: FastifyReply) {
