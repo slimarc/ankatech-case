@@ -7,7 +7,6 @@ import {
     FindPortfolioByClientId,
     PortfolioResponse,
     PortfoliosResponse,
-    CreatePortfolio,
 } from "@domain/schema/portfolio.schemas";
 
 export class PrismaPortfolioRepository implements PortfolioRepository {
@@ -76,7 +75,6 @@ export class PrismaPortfolioRepository implements PortfolioRepository {
             }))
         };
     }
-
 
     async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse | null> {
         const portfolio = await this.prisma.portfolio.findFirst({

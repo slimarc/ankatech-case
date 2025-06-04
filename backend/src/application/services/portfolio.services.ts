@@ -3,7 +3,6 @@ import {
     DeletePortfolio,
     FindPortfolio,
     FindPortfolios,
-    FindPortfolioByClientId,
     PortfolioResponse,
     PortfoliosResponse,
 } from "@domain/schema/portfolio.schemas";
@@ -14,10 +13,6 @@ export class PortfolioService {
 
     async findById(params: FindPortfolio): Promise<PortfolioResponse> {
         return this.portfolioRepository.findById(params)
-    }
-
-    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse | null>{
-        return this.portfolioRepository.findByClientId(params)
     }
 
     async findMany(params: FindPortfolios): Promise<PortfoliosResponse> {

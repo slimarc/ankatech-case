@@ -1,11 +1,9 @@
-import {PortfolioService} from "../../../application/services/portfolio.services";
+import {PortfolioService} from "@application/services/portfolio.services";
 import {
     FindPortfolio,
     findPortfolioSchema,
     FindPortfolios,
     findPortfoliosSchema,
-    FindPortfolioByClientId,
-    findPortfolioByClientIdSchema,
     DeletePortfolio,
     deletePortfolioSchema
 } from "@domain/schema/portfolio.schemas";
@@ -20,14 +18,8 @@ export class PortfolioController {
         return reply.send(asset)
     }
 
-    async findByClientId(request: FastifyRequest<{ Params: FindPortfolioByClientId}>, reply: FastifyReply) {
-        const params = findPortfolioByClientIdSchema.parse(request.params)
-        const asset = await this.portfolioService.findByClientId(params)
-        return reply.send(asset)
-    }
-
-    async findMany(request: FastifyRequest<{ Querystring: FindPortfolios }>, reply: FastifyReply) {
-        const params = findPortfoliosSchema.parse(request.query)
+    async findMany(request: FastifyRequest<{ Params: FindPortfolios }>, reply: FastifyReply) {
+        const params = findPortfoliosSchema.parse(request.params)
         const assets = await this.portfolioService.findMany(params)
         return reply.send(assets)
     }
