@@ -23,12 +23,13 @@ export const findAssetSchema = z.object({
 })
 
 export const findAssetsSchema = z.object({
-    page: z.number().int().positive().optional().default(1),
-    limit: z.number().int().positive().optional().default(10),
     search: z.string().optional(),
-    minValue: currencyStringInputSchema.optional(),
-    maxValue: currencyStringInputSchema.optional()
-})
+    minValue: z.coerce.number().optional(),
+    maxValue: z.coerce.number().optional(),
+    page: z.coerce.number().min(1).default(1),
+    limit: z.coerce.number().min(1).max(100).default(10),
+});
+
 
 export const deleteAssetSchema = z.object({
     id: z.string().uuid()

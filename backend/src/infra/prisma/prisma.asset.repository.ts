@@ -56,13 +56,21 @@ export class PrismaAssetRepository implements AssetRepository{
     }
 
     async findMany(params: FindAssets): Promise<AssetsResponse> {
-        const where = {
-            AND: [
-                params.search ? { name: { contains: params.search, mode: 'insensitive' } } : {},
-                params.minValue ? { currentValue: { gte: params.minValue } } : {},
-                params.maxValue ? { currentValue: { lte: params.maxValue } } : {},
-            ],
-        };
+        const where: any = {};
+        if (params.search) {
+            where.name = { contains: params.search, mode: 'insensitive' };
+        }
+
+        if (params.minValue !== undefined || params.maxValue !== undefined) {
+            where.currentValue = {};
+            if (params.minValue !== undefined) where.currentValue.gte = params.minValue;
+            if (params.maxValue !== undefined) where.currentValue.lte = params.maxValue;
+        }
+
+        const whereForCount: any = { ...where };
+        if (whereForCount.name && whereForCount.name.mode) {
+            delete whereForCount.name.mode;
+        }
 
         const [assets, total] = await Promise.all([
             this.prisma.asset.findMany({
@@ -70,8 +78,8 @@ export class PrismaAssetRepository implements AssetRepository{
                 skip: (params.page - 1) * params.limit,
                 take: params.limit,
             }),
-            this.prisma.asset.count({ where }),
-        ])
+            this.prisma.asset.count({ where: whereForCount }),
+        ]);
 
         return {
             assets: assets.map(asset => ({
@@ -82,7 +90,7 @@ export class PrismaAssetRepository implements AssetRepository{
             total,
             page: params.page,
             limit: params.limit,
-        }
+        };
     }
 
 }

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest} from "fastify";
-import { AssetService} from "../../../application/services/asset.services";
+import { AssetService} from "@application/services/asset.services";
 import {
     CreateAsset,
     createAssetSchema,
