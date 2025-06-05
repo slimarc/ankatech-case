@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import { PrismaClient } from '@prisma/client'
@@ -18,6 +19,7 @@ import {assetHoldingRoutes} from "@infra/http/routes/assets-holding.routes";
 import {AssetHoldingController} from "@infra/http/controllers/asset-holding.controller";
 import {PrismaAssetHoldingRepository} from "@infra/prisma/prisma.asset-holding.repository";
 import {AssetHoldingService} from "@application/services/asset-holding.services";
+
 
 
 export function buildApp() {
