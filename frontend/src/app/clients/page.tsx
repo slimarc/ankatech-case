@@ -5,8 +5,8 @@ import {useQuery } from '@tanstack/react-query';
 import { ClientsListResponse,
         ClientResponse,
         CreateClientPayload,
-        UpdateClientPayload
-} from '@/types/client';
+        UpdateClientPayload,
+} from '@/validations/client.validations';
 
 import {Table,
         TableBody,
@@ -22,11 +22,16 @@ import {Alert,
         AlertTitle
 } from '@/components/ui/alert';
 
-import { Terminal } from 'lucide-react';
+import {Terminal,
+        Trash2,
+        Pencil,
+        Plus,
+        ArrowLeft
+} from 'lucide-react';
 
-import { ClientApiService } from "@/services/clientService";
-import { useRemoveClient } from "@/hooks/useRemoveClient";
-import { ClientFormModal } from '@/components/clients/clientFormModal';
+import { ClientApiService } from "@/services/client.service";
+import { useRemoveClient } from "@/hooks/use.remove.client";
+import { ClientFormModal } from '@/components/clients/client.form.modal';
 import {AlertDialog,
         AlertDialogAction,
         AlertDialogCancel,
@@ -36,7 +41,8 @@ import {AlertDialog,
         AlertDialogHeader,
         AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import {useSaveClient} from "@/hooks/useSaveClient";
+import {useSaveClient} from "@/hooks/use.save.client";
+import Link from "next/link";
 
 export default function ClientsPage() {
 
@@ -52,16 +58,11 @@ export default function ClientsPage() {
 
     const { mutate: removeClient, isPending: isRemoving, alertInfo: removeAlertInfo } = useRemoveClient();
 
-    const { mutate: saveClient, isPending: isSaving } = useSaveClient({
-        onSuccessCallback: () => {
-            setIsModalOpen(false);
-            setEditingClient(undefined);
-            alert('Cliente salvo com sucesso!');
-        },
-        onErrorCallback: (err) => {
-            console.error('Erro ao salvar cliente:', err);
-            alert('Erro ao salvar cliente: ' + (err.message || 'Erro desconhecido'));
-        },
+    const { mutate: saveClient, isPending: isSaving, alertInfo: saveAlertInfo} = useSaveClient({
+        onModalClose: () => setIsModalOpen(false),
+        onClearEditingClient: () => setEditingClient(undefined),
+        onErrorCallback: () => setEditingClient(undefined),
+        onSuccessCallback: () => setEditingClient(undefined),
     });
 
     const handleEdit = (client: ClientResponse) => {
@@ -95,6 +96,8 @@ export default function ClientsPage() {
         setIsAlertDialogOpen(false);
     }
 
+    const currentAlertInfo = removeAlertInfo.isVisible ? removeAlertInfo : saveAlertInfo;
+
     if (isLoading) {
         return <p className="text-center p-4">Carregando clientes...</p>;
     }
@@ -106,15 +109,22 @@ export default function ClientsPage() {
     return (
         <div className="container mx-auto py-10">
             <h1 className="text-3xl font-bold mb-6 text-center" >Clientes</h1>
-            <div className="flex justify-end mb-4">
-                <Button onClick={handleAddClientClick} className="cursor-pointer">Adicionar cliente</Button>
+            <div className="flex justify-between items-center mb-4">
+                <Link href="/" passHref>
+                    <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900 cursor-pointer">
+                        <ArrowLeft className="h-6 w-6" />
+                    </Button>
+                </Link>
+                <Button variant="ghost" size="icon" onClick={handleAddClientClick} className="cursor-pointer">
+                    <Plus className="h-6 w-6" />
+                </Button>
             </div>
 
-            {removeAlertInfo.isVisible && (
-                <Alert variant={removeAlertInfo.variant} className="fixed bottom-4 right-4 w-[300px] z-50">
+            {currentAlertInfo.isVisible && (
+                <Alert variant={currentAlertInfo.variant} className="fixed bottom-4 right-4 w-[300px] z-50">
                     <Terminal className="h-4 w-4" />
-                    <AlertTitle>{removeAlertInfo.title}</AlertTitle>
-                    <AlertDescription>{removeAlertInfo.description}</AlertDescription>
+                    <AlertTitle>{currentAlertInfo.title}</AlertTitle>
+                    <AlertDescription>{currentAlertInfo.description}</AlertDescription>
                 </Alert>
             )}
 
@@ -137,13 +147,19 @@ export default function ClientsPage() {
                                 <TableCell>{client.email}</TableCell>
                                 <TableCell>{client.status}</TableCell>
                                 <TableCell className="text-right">
-                                    <Button variant="outline" size="sm" className="mr-2 cursor-pointer" onClick={() => handleEdit(client)}>
-                                        Editar
+                                    <Button variant="ghost"
+                                            size="icon"
+                                            className="cursor-pointer" onClick={() => handleEdit(client)}>
+                                        <Pencil className="h-4 w-4"/>
                                     </Button>
-                                    <Button variant="destructive" size="sm" className="cursor-pointer" onClick={() =>
-                                        handleDelete(client.id)}
-                                            disabled={isRemoving}>
-                                        {isRemoving ? 'Excluindo...' : 'Excluir'}
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-red-500 hover:text-red-700 cursor-pointer"
+                                        onClick={() => handleDelete(client.id)}
+                                        disabled={isRemoving}>
+                                        {isRemoving ? ( <span className="animate-spin text-red-500">...</span>) :
+                                            (<Trash2 className="h-4 w-4" />)}
                                     </Button>
                                 </TableCell>
                             </TableRow>
@@ -172,8 +188,8 @@ export default function ClientsPage() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleConfirmDelete} disabled={isRemoving}>
+                        <AlertDialogCancel className="cursor-pointer">Cancelar</AlertDialogCancel>
+                        <AlertDialogAction className="cursor-pointer" onClick={handleConfirmDelete} disabled={isRemoving}>
                             {isRemoving ? 'Excluindo...' : 'Confirmar'}
                         </AlertDialogAction>
                     </AlertDialogFooter>
