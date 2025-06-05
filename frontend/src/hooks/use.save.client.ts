@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ClientApiService } from '@/services/clientService';
+import { ClientApiService } from '@/services/client.service';
 import { CreateClientPayload, UpdateClientPayload } from '@/types/client';
 
 interface UseSaveClientOptions {

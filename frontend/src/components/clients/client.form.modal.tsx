@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import React from 'react';
 
 import { CreateClientPayload, UpdateClientPayload, ClientResponse } from '@/types/client';
-import { createClientSchema, updateClientSchema, clientFormInputSchema } from '@/validations/clientValidations';
+import { createClientSchema, updateClientSchema, clientFormInputSchema } from '@/validations/client.validations';
 
 interface ClientFormModalProps {
     isOpen: boolean;
