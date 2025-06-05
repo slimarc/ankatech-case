@@ -104,8 +104,8 @@ export class PrismaPortfolioRepository implements PortfolioRepository {
             assets: portfolio.assets.map(pa => ({
                 id: pa.asset.id,
                 name: pa.asset.name,
-                currentValue: pa.asset.currentValue.toString(),
-                quantity: pa.quantity.toString()
+                currentValue: pa.asset.currentValue.toFixed(2),
+                quantity: pa.quantity.toFixed(4)
             }))
         };
     }
@@ -139,8 +139,8 @@ export class PrismaPortfolioRepository implements PortfolioRepository {
                 assets: portfolio.assets.map(pa => ({
                     id: pa.asset.id,
                     name: pa.asset.name,
-                    currentValue: pa.asset.currentValue.toString(),
-                    quantity: pa.quantity.toString()
+                    currentValue: pa.asset.currentValue.toFixed(2),
+                    quantity: pa.quantity.toFixed(4)
                 }))
             })),
             total,

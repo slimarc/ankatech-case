@@ -18,8 +18,8 @@ export class PrismaAssetHoldingRepository implements AssetHoldingRepository {
             portfolioId: assetHolding.portfolioId,
             assetId: assetHolding.id,
             name: assetHolding.asset.name,
-            currentValue: assetHolding.asset.currentValue.toString(),
-            quantity: assetHolding.quantity.toString(),
+            currentValue: assetHolding.asset.currentValue.toFixed(2),
+            quantity: assetHolding.quantity.toFixed(4),
         };
     }
 

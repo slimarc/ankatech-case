@@ -20,7 +20,7 @@ export class PrismaAssetRepository implements AssetRepository{
         return {
             id: asset.id,
             name: asset.name,
-            currentValue: asset.currentValue.toString(),
+            currentValue: asset.currentValue.toFixed(2),
         }
     }
 
@@ -33,7 +33,7 @@ export class PrismaAssetRepository implements AssetRepository{
         return {
             id: asset.id,
             name: asset.name,
-            currentValue: asset.currentValue.toString(),
+            currentValue: asset.currentValue.toFixed(2),
         }
     }
 
@@ -51,7 +51,7 @@ export class PrismaAssetRepository implements AssetRepository{
         return {
             id: asset.id,
             name: asset.name,
-            currentValue: asset.currentValue.toString(),
+            currentValue: asset.currentValue.toFixed(2),
         }
     }
 
@@ -85,7 +85,7 @@ export class PrismaAssetRepository implements AssetRepository{
             assets: assets.map(asset => ({
                 id: asset.id,
                 name: asset.name,
-                currentValue: asset.currentValue.toString(),
+                currentValue: asset.currentValue.toFixed(2),
             })),
             total,
             page: params.page,
