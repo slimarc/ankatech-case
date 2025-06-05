@@ -1,5 +1,6 @@
 'use client';
 
+import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -16,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import React from 'react';
 
 import { CreateClientPayload, UpdateClientPayload, ClientResponse } from '@/types/client';
-import { createClientSchema, updateClientSchema } from '@/validations/clientValidations';
+import { createClientSchema, updateClientSchema, clientFormInputSchema } from '@/validations/clientValidations';
 
 interface ClientFormModalProps {
     isOpen: boolean;
@@ -26,19 +27,11 @@ interface ClientFormModalProps {
     isSubmitting: boolean;
 }
 
-type BaseFormFields = {
-    name: string;
-    email: string;
-    status: 'ACTIVE' | 'INACTIVE';
-};
-
-type FormData = Partial<BaseFormFields>;
+type ClientFormData = z.infer<typeof clientFormInputSchema>;
 
 export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubmitting }: ClientFormModalProps) {
-    const formSchema = initialData ? updateClientSchema : createClientSchema;
-
-    const form = useForm<FormData>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<ClientFormData>({
+        resolver: zodResolver(clientFormInputSchema),
         defaultValues: {
             name: initialData?.name || '',
             email: initialData?.email || '',
@@ -47,15 +40,21 @@ export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubm
     });
 
     React.useEffect(() => {
-        if (initialData) {
-            form.reset(initialData);
-        } else {
-            form.reset({ name: '', email: '', status: 'ACTIVE' });
-        }
+        form.reset({
+            name: initialData?.name || '',
+            email: initialData?.email || '',
+            status: initialData?.status || 'ACTIVE',
+        });
     }, [initialData, isOpen, form]);
 
-    const handleSubmit = (data: FormData) => {
-        onSubmit(data);
+    const handleSubmit = (data: ClientFormData) => {
+        if (initialData) {
+            const parsedData = updateClientSchema.parse(data);
+            onSubmit(parsedData);
+        } else {
+            const parsedData = createClientSchema.parse(data);
+            onSubmit(parsedData);
+        }
     };
 
     return (
@@ -77,8 +76,10 @@ export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubm
                             {...form.register('name')}
                             className="col-span-3"
                         />
-                        {form.formState.errors.name && form.formState.errors.name.message && (
-                            <p className="col-span-4 text-red-500 text-sm">{form.formState.errors.name.message}</p>
+                        {form.formState.errors.name && (
+                            <p className="col-span-4 text-red-500 text-sm">
+                                {form.formState.errors.name.message}
+                            </p>
                         )}
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
@@ -90,8 +91,10 @@ export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubm
                             {...form.register('email')}
                             className="col-span-3"
                         />
-                        {form.formState.errors.email && form.formState.errors.email.message && (
-                            <p className="col-span-4 text-red-500 text-sm">{form.formState.errors.email.message}</p>
+                        {form.formState.errors.email && (
+                            <p className="col-span-4 text-red-500 text-sm">
+                                {form.formState.errors.email.message}
+                            </p>
                         )}
                     </div>
                     {initialData && (
@@ -103,17 +106,20 @@ export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubm
                                 id="status"
                                 {...form.register('status')}
                                 className="col-span-3 border p-2 rounded"
+                                defaultValue={initialData.status}
                             >
                                 <option value="ACTIVE">ATIVO</option>
                                 <option value="INACTIVE">INATIVO</option>
                             </select>
-                            {form.formState.errors.status && form.formState.errors.status.message && (
-                                <p className="col-span-4 text-red-500 text-sm">{form.formState.errors.status.message}</p>
+                            {form.formState.errors.status && (
+                                <p className="col-span-4 text-red-500 text-sm">
+                                    {form.formState.errors.status.message}
+                                </p>
                             )}
                         </div>
                     )}
                     <DialogFooter>
-                        <Button type="submit" disabled={isSubmitting}>
+                        <Button className="cursor-pointer" type="submit" disabled={isSubmitting}>
                             {isSubmitting ? 'Salvando...' : initialData ? 'Salvar Alterações' : 'Adicionar'}
                         </Button>
                     </DialogFooter>
