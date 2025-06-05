@@ -16,8 +16,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React from 'react';
 
-import { CreateClientPayload, UpdateClientPayload, ClientResponse } from '@/types/client';
-import { createClientSchema, updateClientSchema, clientFormInputSchema } from '@/validations/client.validations';
+import {
+    CreateClientPayload,
+    UpdateClientPayload,
+    ClientResponse,
+    clientFormSchema,
+    createClientPayloadSchema,
+    updateClientPayloadSchema,
+} from '@/validations/client.validations';
 
 interface ClientFormModalProps {
     isOpen: boolean;
@@ -27,11 +33,11 @@ interface ClientFormModalProps {
     isSubmitting: boolean;
 }
 
-type ClientFormData = z.infer<typeof clientFormInputSchema>;
+type ClientFormData = z.infer<typeof clientFormSchema>;
 
 export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubmitting }: ClientFormModalProps) {
     const form = useForm<ClientFormData>({
-        resolver: zodResolver(clientFormInputSchema),
+        resolver: zodResolver(clientFormSchema),
         defaultValues: {
             name: initialData?.name || '',
             email: initialData?.email || '',
@@ -48,13 +54,14 @@ export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubm
     }, [initialData, isOpen, form]);
 
     const handleSubmit = (data: ClientFormData) => {
+        let finalPayload: CreateClientPayload | UpdateClientPayload;
+
         if (initialData) {
-            const parsedData = updateClientSchema.parse(data);
-            onSubmit(parsedData);
+            finalPayload = updateClientPayloadSchema.parse(data);
         } else {
-            const parsedData = createClientSchema.parse(data);
-            onSubmit(parsedData);
+            finalPayload = createClientPayloadSchema.parse(data);
         }
+        onSubmit(finalPayload);
     };
 
     return (
@@ -105,11 +112,11 @@ export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubm
                             <select
                                 id="status"
                                 {...form.register('status')}
-                                className="col-span-3 border p-2 rounded"
+                                className="col-span-3 border p-2 rounded cursor-pointer"
                                 defaultValue={initialData.status}
                             >
-                                <option value="ACTIVE">ATIVO</option>
-                                <option value="INACTIVE">INATIVO</option>
+                                <option value="ACTIVE" className="cursor-pointer">ATIVO</option>
+                                <option value="INACTIVE" className="cursor-pointer">INATIVO</option>
                             </select>
                             {form.formState.errors.status && (
                                 <p className="col-span-4 text-red-500 text-sm">
@@ -119,7 +126,7 @@ export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubm
                         </div>
                     )}
                     <DialogFooter>
-                        <Button className="cursor-pointer" type="submit" disabled={isSubmitting}>
+                        <Button type="submit" disabled={isSubmitting} className="cursor-pointer">
                             {isSubmitting ? 'Salvando...' : initialData ? 'Salvar Alterações' : 'Adicionar'}
                         </Button>
                     </DialogFooter>
