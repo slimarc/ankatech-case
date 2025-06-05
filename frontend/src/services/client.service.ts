@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios';
-import { ClientsListResponse, ClientResponse, CreateClientPayload, UpdateClientPayload } from '@/types/client';
+import { ClientsListResponse, ClientResponse, CreateClientPayload, UpdateClientPayload } from '@/validations/client.validations';
 
 export const ClientApiService = {
     getClientList: async (page: number, limit: number) => {
@@ -19,6 +19,6 @@ export const ClientApiService = {
 
     create: async (payload: CreateClientPayload) => {
         const response = await api.post<ClientResponse>('/clients', payload);
-        return response.data; //
+        return response.data;
     }
 };
