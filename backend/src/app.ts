@@ -23,9 +23,14 @@ import {AssetHoldingService} from "@application/services/asset-holding.services"
 
 
 export function buildApp() {
-    const app = Fastify({ logger: true })
+    const app = Fastify({ logger: true });
 
-    app.register(cors, { origin: true })
+    app.register(cors, {
+        origin: ['http://localhost:3000'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+    });
 
     const prismaClient = new PrismaClient()
     const clientRepository = new PrismaClientRepository(prismaClient)
@@ -51,9 +56,9 @@ export function buildApp() {
         clientRoutes(fastify, clientController)
         assetHoldingRoutes(fastify, assetHoldingController)
         done()
-    })
+    });
 
-    app.setErrorHandler(errorHandler)
+    app.setErrorHandler(errorHandler);
 
     return app
 }
