@@ -1,0 +1,544 @@
+{
+	"info": {
+		"_postman_id": "36cde9d3-0a66-4277-a9f9-a25ff3265d91",
+		"name": "Invest",
+		"description": "Aplicação restfull de gerenciamento de clientes e ativos financeiros, desenvolvida com Node.js com Fastify e Prima.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23048135",
+		"_collection_link": "https://speeding-comet-728063.postman.co/workspace/e1e919e6-5497-4073-82bd-d4224430085b/collection/23048135-36cde9d3-0a66-4277-a9f9-a25ff3265d91?action=share&source=collection_link&creator=23048135"
+	},
+	"item": [
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Register client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Roberto Martins\",\r\n    \"email\": \"roberto.martins@domain.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/clients",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Client list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/clients",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search client by uuid",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/clients/{{clientId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clients",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update client",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Sofia Oliveira de Almeira\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/clients/{{clientId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clients",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete client",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/clients/{{clientId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clients",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para operações CRUD relacionadas à entidade Client."
+		},
+		{
+			"name": "Asset",
+			"item": [
+				{
+					"name": "Register asset",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Fundo Banco Bradesco\",\r\n    \"currentValue\": \"127.20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/assets",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assets list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/assets",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search asset by uuid",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/assets/{{assettId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"assets",
+								"{{assettId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update asset",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currentValue\":\"320.80\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/assets/{{assettId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"assets",
+								"{{assettId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete asset",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/assets/{{assettId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"assets",
+								"{{assettId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assets list filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/assets?minValue=80&maxValue=100&page=1&limit=10\n",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"assets"
+							],
+							"query": [
+								{
+									"key": "minValue",
+									"value": "80"
+								},
+								{
+									"key": "maxValue",
+									"value": "100"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10\n"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para operações CRUD relacionadas à entidade Asset."
+		},
+		{
+			"name": "Portfolio",
+			"item": [
+				{
+					"name": "Search Portfolios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/portfolios",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"portfolios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Portfolio",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/portfolios/{{portfolioId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"portfolios",
+								"{{portfolioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Portfolio",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/portfolios/{{portfolioId}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"portfolios",
+								"{{portfolioId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para operações CRUD relacionadas à entidade Portfolio."
+		},
+		{
+			"name": "Asset Holding",
+			"item": [
+				{
+					"name": "Register asset holding",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": \"11ca26fe-370c-4201-beae-fe965254cf64\",\r\n    \"assetId\": \"43c4f7fd-1fdb-461d-bf40-3f3d0c0ca75c\",\r\n    \"quantity\": \"22\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/asset-holdings",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"asset-holdings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/asset-holdings/{{asset-holding-id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"asset-holdings",
+								"{{asset-holding-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Quantity",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"portfolioId\":\"e1a6b659-a6ec-4cf5-8605-7cdbb921b6ef\",\r\n    \"assetId\":\"a5813c2b-acb6-46d4-8fb9-8a36771f4725\",\r\n    \"quantity\": \"10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/asset-holdings",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"asset-holdings"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para operações CRUD relacionadas à entidade Assets Holding."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

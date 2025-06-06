@@ -57,7 +57,7 @@ cd ankatech_case/apps/ # Certifique-se de estar na raíz do monorepo (onde está
 
 ### 2\. Configurar Variáveis de Ambiente
 
-Crie um arquivo `.env.docker` na raiz do monorepo (`ankatech_case/apps/`) com o seguinte conteúdo:
+Crie um arquivo `.env.docker` na raiz do monorepo com o seguinte conteúdo:
 
 ```
 MYSQL_ROOT_PASSWORD=your_secure_password_here # Senha para o usuário 'root' do MySQL. 
@@ -95,9 +95,9 @@ Após todos os serviços estarem rodando:
 🔌 Documentação da API (Postman)
 --------------------------------
 
-Você pode encontrar a coleção do Postman para testar todos os endpoints da API no diretório `docs/`.
+Você pode encontrar a coleção do Postman para testar todos os endpoints da API indo em:
 
--   **`ankatech_case/apps/docs/PostmanCollection.json`**
+-   **`/docs/Invest.postman_collection.json`**
 
 Para importá-la para o Postman, siga as instruções de importação de coleção.
 
