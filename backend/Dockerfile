@@ -19,4 +19,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
-CMD sh -c "npx prisma migrate deploy && node dist/server.js"
+RUN apk add --no-cache netcat-openbsd
+
+CMD sh -c "until nc -z db 3306; do echo 'Waiting for DB to be ready...'; sleep 1; done && npx prisma migrate deploy && node dist/server.js"

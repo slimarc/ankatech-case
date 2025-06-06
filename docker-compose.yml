@@ -8,6 +8,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./docs/dump_investdb.sql:/docker-entrypoint-initdb.d/dump_investdb.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
