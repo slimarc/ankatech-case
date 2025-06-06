@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend - Web App
 
-## Getting Started
+Este diretório contém a aplicação web frontend, desenvolvida com **Next.js**. Ela é responsável pela interface do usuário e consome a API do backend.
 
-First, run the development server:
+## 1. Visão Geral das Funcionalidades
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+O frontend oferece as seguintes funcionalidades principais:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1.1. Gerenciamento de Clientes (`/clients`)
+- **Listagem:** Exibe uma tabela com clientes (nome, e-mail, status).
+- **Adicionar:** Permite cadastrar novos clientes via modal de formulário.
+- **Editar:** Permite atualizar clientes existentes via modal de formulário.
+- **Excluir:** Permite remover clientes com confirmação via modal.
+- **Feedback Visual:** Alertas de sucesso e erro são exibidos na tela para as operações.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1.2. Página de Ativos (`/assets`)
+- **Listagem:** Exibe a lista de ativos financeiros.
+- **Adicionar:** Permite cadastrar novos ativos financeiros via modal de formulário.
+- **Editar:** Permite atualizar ativos financeiros existentes via modal de formulário.
+- **Excluir:** Permite remover ativos financeiros com confirmação via modal.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## 2. Tecnologias Utilizadas
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js (App Router):** Framework React.
+- **React:** Biblioteca UI.
+- **ShadCN UI:** Componentes de interface.
+- **React Query:** Busca e mutação de dados da API.
+- **React Hook Form + Zod:** Formulários e validação.
+- **Axios:** Requisições HTTP.
+- **Tailwind CSS:** Estilização.
+- **Lucide React:** Ícones.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 3. Como Rodar o Frontend Localmente (Desenvolvimento)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Para desenvolver o frontend com hot-reloading:
 
-## Deploy on Vercel
+1.  **Certifique-se de que o Backend e o Banco de Dados estejam rodando via Docker Compose.**
+    ```bash
+    # Na raiz do monorepo 
+    docker-compose up --build -d db backend
+    ```
+    O backend estará acessível em `http://localhost:4000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2.  **Configure o ambiente local do frontend.**
+    Na pasta `./frontend/`, crie ou verifique o arquivo `.env.local` com a URL do backend:
+    ```
+    NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3.  **Instale as dependências e inicie o servidor de desenvolvimento.**
+    ```bash
+    cd ./frontend/
+    npm install
+    npm run dev
+    ```
+    O frontend estará acessível em `http://localhost:3000`.
