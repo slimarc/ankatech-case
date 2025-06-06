@@ -38,7 +38,7 @@ export const useSaveClient = (options?: UseSaveClientOptions) => {
                 return ClientApiService.create(mutationPayload.payload);
             }
         },
-        onSuccess: (data, variables, context) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey : ['clients']});
             setAlertInfo({
                 isVisible: true,

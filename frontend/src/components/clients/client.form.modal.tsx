@@ -20,6 +20,7 @@ import {
     CreateClientPayload,
     UpdateClientPayload,
     ClientResponse,
+    ClientFormData,
     clientFormSchema,
     createClientPayloadSchema,
     updateClientPayloadSchema,
@@ -32,8 +33,6 @@ interface ClientFormModalProps {
     onSubmit: (data: CreateClientPayload | UpdateClientPayload) => void;
     isSubmitting: boolean;
 }
-
-type ClientFormData = z.infer<typeof clientFormSchema>;
 
 export function ClientFormModal({ isOpen, onClose, initialData, onSubmit, isSubmitting }: ClientFormModalProps) {
     const form = useForm<ClientFormData>({

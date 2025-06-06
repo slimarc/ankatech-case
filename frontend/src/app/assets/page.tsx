@@ -1,25 +1,102 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-
-import { api } from '@/lib/axios';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import {AssetsListResponse, AssetResponse} from "@/validations/asset.validations";
-import Link from "next/link";
-import {ArrowLeft, Plus} from "lucide-react";
 import React from "react";
+import {useQuery } from '@tanstack/react-query';
+import { AssetsListResponse,
+    AssetResponse,
+    CreateAssetPayload,
+    UpdateAssetPayload,
+} from '@/validations/asset.validations';
+
+import {Table,
+        TableBody,
+        TableCell,
+        TableHead,
+        TableHeader,
+        TableRow
+} from '@/components/ui/table';
+
+import { Button } from '@/components/ui/button';
+import {Alert,
+    AlertDescription,
+    AlertTitle
+} from '@/components/ui/alert';
+
+import {Terminal,
+    Trash2,
+    Pencil,
+    Plus,
+    ArrowLeft
+} from 'lucide-react';
+
+import { AssetApiService } from "@/services/asset.service";
+import { AssetFormModal } from '@/components/assets/asset.form.modal';
+import {AlertDialog,
+        AlertDialogAction,
+        AlertDialogCancel,
+        AlertDialogContent,
+        AlertDialogDescription,
+        AlertDialogFooter,
+        AlertDialogHeader,
+        AlertDialogTitle
+} from "@/components/ui/alert-dialog";
+import {useSaveAsset} from "@/hooks/use.save.asset";
+import Link from "next/link";
+import {useRemoveAsset} from "@/hooks/use.remove.asset";
 
 export default function AssetsPage() {
+
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [isAlertDialogOpen, setIsAlertDialogOpen] = React.useState(false);
+    const [editingAsset, setEditingAsset] = React.useState<AssetResponse | undefined>(undefined);
+    const [assetToDeleteId, setAssetToDeleteId] = React.useState<string | null>(null);
+
     const { data, isLoading, error } = useQuery<AssetsListResponse>({
         queryKey: ['assets'],
-        queryFn: async () => {
-            const response = await api.get('/assets', {
-                params: { page: 1, limit: 10 }
-            });
-            return response.data;
-        },
+        queryFn: async () => AssetApiService.getAssetList(1, 10),
     });
+
+    const { mutate: removeAsset, isPending: isRemoving, alertInfo: removeAlertInfo } = useRemoveAsset();
+
+    const { mutate: saveAsset, isPending: isSaving, alertInfo: saveAlertInfo} = useSaveAsset({
+        onModalClose: () => setIsModalOpen(false),
+        onClearEditingAsset: () => setEditingAsset(undefined),
+        onErrorCallback: () => setEditingAsset(undefined),
+        onSuccessCallback: () => setEditingAsset(undefined),
+    });
+
+    const handleEdit = (asset: AssetResponse) => {
+        setEditingAsset(asset);
+        setIsModalOpen(true);
+    }
+
+    const handleAddAssetClick = () => {
+        setEditingAsset(undefined);
+        setIsModalOpen(true);
+    };
+
+    const handleModalSubmit = (data: CreateAssetPayload | UpdateAssetPayload) => {
+        if (editingAsset) {
+            saveAsset({ type: 'update', id: editingAsset.id, payload: data as UpdateAssetPayload });
+        } else {
+            saveAsset({ type: 'create', payload: data as CreateAssetPayload });
+        }
+    };
+
+    const handleDelete = (assetId: string) => {
+        setAssetToDeleteId(assetId);
+        setIsAlertDialogOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (assetToDeleteId) {
+            removeAsset(assetToDeleteId);
+            setAssetToDeleteId(null);
+        }
+        setIsAlertDialogOpen(false);
+    }
+
+    const currentAlertInfo = removeAlertInfo.isVisible ? removeAlertInfo : saveAlertInfo;
 
     if (isLoading) {
         return <p className="text-center p-4">Carregando ativos...</p>;
@@ -38,10 +115,18 @@ export default function AssetsPage() {
                         <ArrowLeft className="h-6 w-6" />
                     </Button>
                 </Link>
-                <Button variant="ghost" size="icon" className="cursor-pointer">
+                <Button variant="ghost" size="icon" onClick={handleAddAssetClick} className="cursor-pointer">
                     <Plus className="h-6 w-6" />
                 </Button>
             </div>
+
+            {currentAlertInfo.isVisible && (
+                <Alert variant={currentAlertInfo.variant} className="fixed bottom-4 right-4 w-[300px] z-50">
+                    <Terminal className="h-4 w-4" />
+                    <AlertTitle>{currentAlertInfo.title}</AlertTitle>
+                    <AlertDescription>{currentAlertInfo.description}</AlertDescription>
+                </Alert>
+            )}
 
             {data?.assets.length === 0 ? (
                 <p className="text-center text-gray-500">Nenhum ativo financeiro encontrado.</p>
@@ -55,18 +140,30 @@ export default function AssetsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.assets.map((assets: AssetResponse) => (
-                            <TableRow key={assets.id}>
-                                <TableCell className="font-medium">{assets.name}</TableCell>
+                        {data?.assets.map((asset: AssetResponse) => (
+                            <TableRow key={asset.id}>
+                                <TableCell className="font-medium">{asset.name}</TableCell>
                                 <TableCell className="text-left">
                                     <div className="flex items-center justify-end gap-x-0.5">
                                         <span>R$</span>
-                                        <span>{assets.currentValue}</span>
+                                        <span>{asset.currentValue}</span>
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button variant="outline" size="sm" className="mr-2">Editar</Button>
-                                    <Button variant="destructive" size="sm">Excluir</Button>
+                                    <Button variant="ghost"
+                                            size="icon"
+                                            className="cursor-pointer" onClick={() => handleEdit(asset)}>
+                                        <Pencil className="h-4 w-4"/>
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-red-500 hover:text-red-700 cursor-pointer"
+                                        onClick={() => handleDelete(asset.id)}
+                                        disabled={isRemoving}>
+                                        {isRemoving ? ( <span className="animate-spin text-red-500">...</span>) :
+                                            (<Trash2 className="h-4 w-4" />)}
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -76,6 +173,32 @@ export default function AssetsPage() {
             <div className="mt-6 text-left text-gray-600">
                 <p>Total de ativos financeiro: {data?.total}</p>
             </div>
+
+            <AssetFormModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                initialData={editingAsset}
+                onSubmit={handleModalSubmit}
+                isSubmitting={isSaving}
+            />
+
+            <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Você tem certeza disso?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Esta ação não pode ser desfeita. Isso excluirá permanentemente o ativo.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="cursor-pointer">Cancelar</AlertDialogCancel>
+                        <AlertDialogAction className="cursor-pointer" onClick={handleConfirmDelete} disabled={isRemoving}>
+                            {isRemoving ? 'Excluindo...' : 'Confirmar'}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
         </div>
     );
 }
