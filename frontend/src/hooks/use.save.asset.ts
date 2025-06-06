@@ -9,7 +9,7 @@ type SaveAssetMutationPayload =
 
 interface UseSaveAssetOptions {
     onSuccessCallback?: () => void;
-    onErrorCallback?: (error: any) => void;
+    onErrorCallback?: (error: unknown) => void;
     onModalClose?: () => void;
     onClearEditingAsset?: () => void;
 }
@@ -38,7 +38,7 @@ export const useSaveAsset = (options?: UseSaveAssetOptions) => {
                 return AssetApiService.create(mutationPayload.payload);
             }
         },
-        onSuccess: (data, variables, context) => {
+        onSuccess: () => {
             queryAsset.invalidateQueries({ queryKey : ['assets']});
             setAlertInfo({
                 isVisible: true,
@@ -57,13 +57,17 @@ export const useSaveAsset = (options?: UseSaveAssetOptions) => {
             }
             setTimeout(() => setAlertInfo(prevAlertInfo => ({ ...prevAlertInfo, isVisible: false })), 3000);
         },
-        onError: (err: any) => {
-            console.error('Erro ao salvar ativo:', err);
+        onError: (err: unknown) => {
+            console.error('Erro ao salvar cliente:', err);
+            let errorMessage: string =  "Erro desconhecido";
+            if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+                errorMessage = (err as { message: string }).message;
+            }
             setAlertInfo({
                 isVisible: true,
                 variant: "destructive",
                 title: "Erro ao Salvar",
-                description: `Não foi possível salvar o ativo: ${err.message || 'Erro desconhecido'}`
+                description: `Não foi possível salvar o ativo: ${errorMessage}`
             });
             if (options?.onErrorCallback){
                 options.onErrorCallback(err);

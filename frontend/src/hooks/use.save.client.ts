@@ -9,7 +9,7 @@ type SaveClientMutationPayload =
 
 interface UseSaveClientOptions {
     onSuccessCallback?: () => void;
-    onErrorCallback?: (error: any) => void;
+    onErrorCallback?: (error: unknown) => void;
     onModalClose?: () => void;
     onClearEditingClient?: () => void;
 }
@@ -38,8 +38,8 @@ export const useSaveClient = (options?: UseSaveClientOptions) => {
                 return ClientApiService.create(mutationPayload.payload);
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey : ['clients']});
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey : ['clients']});
             setAlertInfo({
                 isVisible: true,
                 variant: "default",
@@ -58,13 +58,17 @@ export const useSaveClient = (options?: UseSaveClientOptions) => {
             setTimeout(() => setAlertInfo(prevAlertInfo =>
                 ({ ...prevAlertInfo, isVisible: false })), 3000);
         },
-        onError: (err: any) => {
+        onError: (err: unknown) => {
             console.error('Erro ao salvar cliente:', err);
+            let errorMessage: string =  "Erro desconhecido";
+            if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+                errorMessage = (err as { message: string }).message;
+            }
             setAlertInfo({
                 isVisible: true,
                 variant: "destructive",
                 title: "Erro ao Salvar",
-                description: `Não foi possível salvar o cliente: ${err.message || 'Erro desconhecido'}`
+                description: `Não foi possível salvar o cliente: ${errorMessage}`
             });
             if (options?.onErrorCallback){
                 options.onErrorCallback(err);

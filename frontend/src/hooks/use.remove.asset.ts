@@ -21,23 +21,27 @@ export const useRemoveAsset = () => {
 
     const mutation = useMutation({
         mutationFn: (assetId: string) => AssetApiService.remove(assetId),
-        onSuccess: () => {
-            queryAsset.invalidateQueries({ queryKey : ['assets']});
+        onSuccess: async () => {
+            await queryAsset.invalidateQueries({ queryKey : ['assets']});
             setAlertInfo({
                 isVisible: true,
                 variant: "default",
                 title: "Sucesso!",
-                description: "Assete excluído com sucesso."
+                description: "Ativo excluído com sucesso."
             });
             setTimeout(() => setAlertInfo(prevAlertInfo => ({ ...prevAlertInfo, isVisible: false })), 3000);
         },
-        onError: (err: any) => {
-            console.error('Erro ao excluir assete:', err);
+        onError: (err: unknown) => {
+            console.error('Erro ao excluir ativo:', err);
+            let errorMessage: string =  "Erro desconhecido";
+            if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+                errorMessage = (err as { message: string }).message;
+            }
             setAlertInfo({
                 isVisible: true,
                 variant: "destructive",
                 title: "Erro na Exclusão",
-                description: `Não foi possível excluir o assete: ${err.message || 'Erro desconhecido'}`
+                description: `Não foi possível excluir o ativo: ${errorMessage}`
             });
             setTimeout(() => setAlertInfo(prevAlertInfo => ({ ...prevAlertInfo, isVisible: false })), 5000);
         }
