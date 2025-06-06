@@ -2,11 +2,11 @@
 
 Este diretório contém a implementação da API de backend, desenvolvida com Node.js, Fastify e Prisma.
 
-## 1. Visão Geral
+## 1. Visão geral
 
 A API é responsável por gerenciar dados de clientes e ativos financeiros, fornecendo endpoints para operações CRUD (Create, Read, Update, Delete). Ela se conecta a um banco de dados MySQL via Prisma ORM.
 
-## 2. Tecnologias Específicas
+## 2. Tecnologias específicas
 
 - **Node.js (v18-alpine):** Ambiente de execução.
 - **Fastify (v5.x):** Framework web rápido e de baixo overhead.
@@ -15,7 +15,7 @@ A API é responsável por gerenciar dados de clientes e ativos financeiros, forn
 - **Zod (v3.x):** Validação de schemas e payloads.
 - **`module-alias` (v2.x):** Para resolução de aliases de caminho em tempo de execução.
 
-## 3. Modelos de Dados (Schema Prisma)
+## 3. Modelos de dados (Schema Prisma)
 
 Os principais modelos de dados gerenciados por esta API estão definidos no `prisma/schema.prisma`:
 
@@ -48,7 +48,7 @@ A API expõe os seguintes endpoints principais:
 | `PATCH`  | `/clients/:id`    | Atualiza dados de um cliente existente.           | ```json { "name": "Cliente Atualizado", "status": "INACTIVE" } ```         | ```json { "id": "uuid", "name": "Cliente Atualizado", "email": "...", "status": "INACTIVE"} ```                                    |
 | `DELETE` | `/clients/:id`    | Remove um cliente pelo ID.                        | *(Nenhum)* | `Status 204 No Content`                                                                                                                     |
 
-### Ativos Financeiros (`/assets`)
+### Ativos financeiros (`/assets`)
 
 | Método | Endpoint          | Descrição                                         | Payload de Exemplo (Request)                                          | Resposta de Exemplo (Response)                                                                                     |
 | :----- | :---------------- | :------------------------------------------------ | :-------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
@@ -68,7 +68,7 @@ A API expõe os seguintes endpoints principais:
 | `DELETE` | `/portfiolios/:id`  | Remove pelo ID.                              | *(Nenhum)* | `Status 204 No Content`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 
 
-### Asset Holdings (`/asset-holdings`)
+### Asset holdings (`/asset-holdings`)
 
 | Método | Endpoint              | Descrição                                                                        | Payload de Exemplo (Request)                                                | Resposta de Exemplo (Response)                                                                                                              |
 | :----- |:----------------------|:---------------------------------------------------------------------------------| :-------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -76,7 +76,7 @@ A API expõe os seguintes endpoints principais:
 | `GET`  | `/asset-holdings/:id` | Captura a movimentação específica entre ativo e um portfolio                     | *(Nenhum)* | ```json { "holdings": [...], "total": 3, "page": 1, "limit": 10 } ```                                                                    |
 | `PATCH`  | `/asset-holdings/:id` | Atualiza a quantidade de um ativo no portfólio.                                  | ```json { "portfolioId": "e1a6b659-a6ec-4cf5-8605-7cdbb921b6ef", "assetId": "a5813c2b-acb6-46d4-8fb9-8a36771f4725", "quantity": "10" }``` | ```json { "id": "uuid", "name": "Nome Ativo", "currentValue": "100.00", "quantity": "15.0000" } ``` | |
 
-## 5. Como Rodar o Backend Localmente (Isoladamente - Modo Dev)
+## 5. Como rodar o backend localmente (Isoladamente - modo dev)
 
 Para rodar apenas o serviço de backend isoladamente (sem o frontend ou Docker Compose completo):
 

@@ -13,14 +13,14 @@ O frontend oferece as seguintes funcionalidades principais:
 - **Excluir:** Permite remover clientes com confirmação via modal.
 - **Feedback Visual:** Alertas de sucesso e erro são exibidos na tela para as operações.
 
-### 1.2. Página de Ativos (`/assets`)
+### 1.2. Página de ativos (`/assets`)
 - **Listagem:** Exibe a lista de ativos financeiros.
 - **Adicionar:** Permite cadastrar novos ativos financeiros via modal de formulário.
 - **Editar:** Permite atualizar ativos financeiros existentes via modal de formulário.
 - **Excluir:** Permite remover ativos financeiros com confirmação via modal.
 
 
-## 2. Tecnologias Utilizadas
+## 2. Tecnologias utilizadas
 
 - **Next.js (App Router):** Framework React.
 - **React:** Biblioteca UI.
@@ -31,7 +31,7 @@ O frontend oferece as seguintes funcionalidades principais:
 - **Tailwind CSS:** Estilização.
 - **Lucide React:** Ícones.
 
-## 3. Como Rodar o Frontend Localmente (Desenvolvimento)
+## 3. Como rodar o frontend localmente (Desenvolvimento)
 
 Para desenvolver o frontend com hot-reloading:
 
