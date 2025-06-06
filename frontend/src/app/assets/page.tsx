@@ -5,10 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import {AssetListResponse, AssetResponse} from "@/types/asset";
+import {AssetsListResponse, AssetResponse} from "@/validations/asset.validations";
+import Link from "next/link";
+import {ArrowLeft, Plus} from "lucide-react";
+import React from "react";
 
 export default function AssetsPage() {
-    const { data, isLoading, error } = useQuery<AssetListResponse>({
+    const { data, isLoading, error } = useQuery<AssetsListResponse>({
         queryKey: ['assets'],
         queryFn: async () => {
             const response = await api.get('/assets', {
@@ -28,9 +31,16 @@ export default function AssetsPage() {
 
     return (
         <div className="container mx-auto py-10">
-            <h1 className="text-3xl font-bold mb-6 text-center">Lista de Ativos Financeiros</h1>
-            <div className="flex justify-end mb-4">
-                <Button>Adicionar Ativo</Button>
+            <h1 className="text-3xl font-bold mb-6 text-center">Lista de Ativos financeiros</h1>
+            <div className="flex justify-between items-center mb-4">
+                <Link href="/" passHref>
+                    <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900 cursor-pointer">
+                        <ArrowLeft className="h-6 w-6" />
+                    </Button>
+                </Link>
+                <Button variant="ghost" size="icon" className="cursor-pointer">
+                    <Plus className="h-6 w-6" />
+                </Button>
             </div>
 
             {data?.assets.length === 0 ? (
@@ -40,7 +50,7 @@ export default function AssetsPage() {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Nome</TableHead>
-                            <TableHead >Valor atual</TableHead>
+                            <TableHead className="text-right">Valor atual</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -48,7 +58,12 @@ export default function AssetsPage() {
                         {data?.assets.map((assets: AssetResponse) => (
                             <TableRow key={assets.id}>
                                 <TableCell className="font-medium">{assets.name}</TableCell>
-                                <TableCell className="text-right">R$ {assets.currentValue}</TableCell>
+                                <TableCell className="text-left">
+                                    <div className="flex items-center justify-end gap-x-0.5">
+                                        <span>R$</span>
+                                        <span>{assets.currentValue}</span>
+                                    </div>
+                                </TableCell>
                                 <TableCell className="text-right">
                                     <Button variant="outline" size="sm" className="mr-2">Editar</Button>
                                     <Button variant="destructive" size="sm">Excluir</Button>
@@ -58,7 +73,7 @@ export default function AssetsPage() {
                     </TableBody>
                 </Table>
             )}
-            <div className="mt-6 text-center text-gray-600">
+            <div className="mt-6 text-left text-gray-600">
                 <p>Total de ativos financeiro: {data?.total}</p>
             </div>
         </div>
