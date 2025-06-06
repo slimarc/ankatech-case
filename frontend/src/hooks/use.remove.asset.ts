@@ -1,18 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AssetApiService } from '@/services/asset.service';
-import { CreateAssetPayload, UpdateAssetPayload } from '@/validations/asset.validations';
+import { AssetApiService } from "@/services/asset.service";
 import React from "react";
-
-type SaveAssetMutationPayload =
-    { type: 'create'; payload: CreateAssetPayload } |
-    { type: 'update'; id: string; payload: UpdateAssetPayload };
-
-interface UseSaveAssetOptions {
-    onSuccessCallback?: () => void;
-    onErrorCallback?: (error: any) => void;
-    onModalClose?: () => void;
-    onClearEditingAsset?: () => void;
-}
 
 interface AlertState {
     isVisible: boolean;
@@ -21,8 +9,9 @@ interface AlertState {
     description: string;
 }
 
-export const useSaveAsset = (options?: UseSaveAssetOptions) => {
+export const useRemoveAsset = () => {
     const queryAsset = useQueryClient();
+
     const [alertInfo, setAlertInfo] = React.useState<AlertState>({
         isVisible: false,
         variant: "default",
@@ -31,55 +20,28 @@ export const useSaveAsset = (options?: UseSaveAssetOptions) => {
     });
 
     const mutation = useMutation({
-        mutationFn: async (mutationPayload: SaveAssetMutationPayload) => {
-            if (mutationPayload.type === 'update') {
-                return AssetApiService.update(mutationPayload.id, mutationPayload.payload);
-            } else {
-                return AssetApiService.create(mutationPayload.payload);
-            }
-        },
-        onSuccess: (data, variables, context) => {
+        mutationFn: (assetId: string) => AssetApiService.remove(assetId),
+        onSuccess: () => {
             queryAsset.invalidateQueries({ queryKey : ['assets']});
             setAlertInfo({
                 isVisible: true,
                 variant: "default",
                 title: "Sucesso!",
-                description: "Ativo salvo com sucesso."
+                description: "Assete excluído com sucesso."
             });
-            if (options?.onSuccessCallback) {
-                options.onSuccessCallback();
-            }
-            if (options?.onModalClose) {
-                options.onModalClose();
-            }
-            if (options?.onClearEditingAsset) {
-                options.onClearEditingAsset();
-            }
             setTimeout(() => setAlertInfo(prevAlertInfo => ({ ...prevAlertInfo, isVisible: false })), 3000);
         },
         onError: (err: any) => {
-            console.error('Erro ao salvar ativo:', err);
+            console.error('Erro ao excluir assete:', err);
             setAlertInfo({
                 isVisible: true,
                 variant: "destructive",
-                title: "Erro ao Salvar",
-                description: `Não foi possível salvar o ativo: ${err.message || 'Erro desconhecido'}`
+                title: "Erro na Exclusão",
+                description: `Não foi possível excluir o assete: ${err.message || 'Erro desconhecido'}`
             });
-            if (options?.onErrorCallback){
-                options.onErrorCallback(err);
-            }
-
-            if (options?.onModalClose){
-                options.onModalClose();
-            }
-
-            if (options?.onClearEditingAsset) {
-                options.onClearEditingAsset();
-            }
-
             setTimeout(() => setAlertInfo(prevAlertInfo => ({ ...prevAlertInfo, isVisible: false })), 5000);
         }
     });
 
     return { ...mutation, alertInfo };
-};
+}
