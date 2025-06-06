@@ -55,7 +55,8 @@ export const useSaveClient = (options?: UseSaveClientOptions) => {
             if (options?.onClearEditingClient) {
                 options.onClearEditingClient();
             }
-            setTimeout(() => setAlertInfo(prevAlertInfo => ({ ...prevAlertInfo, isVisible: false })), 3000);
+            setTimeout(() => setAlertInfo(prevAlertInfo =>
+                ({ ...prevAlertInfo, isVisible: false })), 3000);
         },
         onError: (err: any) => {
             console.error('Erro ao salvar cliente:', err);
@@ -77,7 +78,8 @@ export const useSaveClient = (options?: UseSaveClientOptions) => {
                 options.onClearEditingClient();
             }
 
-            setTimeout(() => setAlertInfo(prevAlertInfo => ({ ...prevAlertInfo, isVisible: false })), 5000);
+            setTimeout(() => setAlertInfo(prevAlertInfo =>
+                ({ ...prevAlertInfo, isVisible: false })), 5000);
         }
     });
 
