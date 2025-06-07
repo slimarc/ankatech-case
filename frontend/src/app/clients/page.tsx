@@ -1,12 +1,13 @@
 'use client';
 
 import React from "react";
-import {useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { ClientsListResponse,
         ClientResponse,
         CreateClientPayload,
         UpdateClientPayload,
 } from '@/validations/client.validations';
+import {useSaveMutation} from "@/hooks/use.save.mutation";
 
 import {Table,
         TableBody,
@@ -26,11 +27,12 @@ import {Terminal,
         Trash2,
         Pencil,
         Plus,
-        ArrowLeft
+        ArrowLeft,
+        Wallet
 } from 'lucide-react';
 
 import { ClientApiService } from "@/services/client.service";
-import { useRemoveClient } from "@/hooks/use.remove.client";
+import {useRemoveMutation} from "@/hooks/use.remove.mutation";
 import { ClientFormModal } from '@/components/clients/client.form.modal';
 import {AlertDialog,
         AlertDialogAction,
@@ -41,7 +43,6 @@ import {AlertDialog,
         AlertDialogHeader,
         AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import {useSaveClient} from "@/hooks/use.save.client";
 import Link from "next/link";
 
 export default function ClientsPage() {
@@ -56,13 +57,16 @@ export default function ClientsPage() {
         queryFn: async () => ClientApiService.getClientList(1, 10),
     });
 
-    const { mutate: removeClient, isPending: isRemoving, alertInfo: removeAlertInfo } = useRemoveClient();
+    const { mutate: removeClient, isPending: isRemoving, alertInfo: removeAlertInfo } = useRemoveMutation({
+        removeFn: ClientApiService.remove,
+        queryKeyToInvalidate: ['clients']
+    });
 
-    const { mutate: saveClient, isPending: isSaving, alertInfo: saveAlertInfo} = useSaveClient({
+    const { mutate: saveClient, isPending: isSaving, alertInfo: saveAlertInfo} = useSaveMutation({
+        createFn: ClientApiService.create,
+        updateFn: ClientApiService.update,
+        queryKeyToInvalidate: ['clients'],
         onModalClose: () => setIsModalOpen(false),
-        onClearEditingClient: () => setEditingClient(undefined),
-        onErrorCallback: () => setEditingClient(undefined),
-        onSuccessCallback: () => setEditingClient(undefined),
     });
 
     const handleEdit = (client: ClientResponse) => {
@@ -147,6 +151,13 @@ export default function ClientsPage() {
                                 <TableCell>{client.email}</TableCell>
                                 <TableCell>{client.status}</TableCell>
                                 <TableCell className="text-right">
+                                    <Link href="/" passHref>
+                                        <Button variant="ghost"
+                                                size="icon"
+                                                className="cursor-pointer">
+                                            <Wallet className="h-4 w-4"/>
+                                        </Button>
+                                    </Link>
                                     <Button variant="ghost"
                                             size="icon"
                                             className="cursor-pointer" onClick={() => handleEdit(client)}>

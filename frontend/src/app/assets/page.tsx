@@ -2,10 +2,10 @@
 
 import React from "react";
 import {useQuery } from '@tanstack/react-query';
-import { AssetsListResponse,
-    AssetResponse,
-    CreateAssetPayload,
-    UpdateAssetPayload,
+import {AssetsListResponse,
+        AssetResponse,
+        CreateAssetPayload,
+        UpdateAssetPayload,
 } from '@/validations/asset.validations';
 
 import {Table,
@@ -30,6 +30,8 @@ import {Terminal,
 } from 'lucide-react';
 
 import { AssetApiService } from "@/services/asset.service";
+import {useRemoveMutation} from "@/hooks/use.remove.mutation";
+import {useSaveMutation} from "@/hooks/use.save.mutation";
 import { AssetFormModal } from '@/components/assets/asset.form.modal';
 import {AlertDialog,
         AlertDialogAction,
@@ -40,9 +42,7 @@ import {AlertDialog,
         AlertDialogHeader,
         AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import {useSaveAsset} from "@/hooks/use.save.asset";
 import Link from "next/link";
-import {useRemoveAsset} from "@/hooks/use.remove.asset";
 
 export default function AssetsPage() {
 
@@ -56,13 +56,16 @@ export default function AssetsPage() {
         queryFn: async () => AssetApiService.getAssetList(1, 10),
     });
 
-    const { mutate: removeAsset, isPending: isRemoving, alertInfo: removeAlertInfo } = useRemoveAsset();
+    const { mutate: removeAsset, isPending: isRemoving, alertInfo: removeAlertInfo } = useRemoveMutation({
+        removeFn: AssetApiService.remove,
+        queryKeyToInvalidate: ['assets']
+    });
 
-    const { mutate: saveAsset, isPending: isSaving, alertInfo: saveAlertInfo} = useSaveAsset({
+    const { mutate: saveAsset, isPending: isSaving, alertInfo: saveAlertInfo} = useSaveMutation({
+        createFn: AssetApiService.create,
+        updateFn: AssetApiService.update,
+        queryKeyToInvalidate: ['assets'],
         onModalClose: () => setIsModalOpen(false),
-        onClearEditingAsset: () => setEditingAsset(undefined),
-        onErrorCallback: () => setEditingAsset(undefined),
-        onSuccessCallback: () => setEditingAsset(undefined),
     });
 
     const handleEdit = (asset: AssetResponse) => {
