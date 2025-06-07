@@ -51,7 +51,8 @@ Certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
 ### 1. Clonar o repositório
 
 ```
-git clone <URL_DO_SEU_REPOSITORIO>
+git clone git@github.com:slimarc/ankatech-case.git
+
 ```
 ```
 cd ankatech_case/apps/ # Certifique-se de estar na raíz do monorepo (onde está o docker-compose.yml)
