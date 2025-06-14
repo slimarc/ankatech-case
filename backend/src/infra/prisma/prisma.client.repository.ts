@@ -60,14 +60,19 @@ export class PrismaClientRepository implements ClientRepository {
     }
 
     async findMany(params: FindClients): Promise<ClientsResponse> {
-        const where = {
-            ...(params.status && {status: params.status}),
-            ...(params.search && {
-                OR: [
-                    {name: {contains: params.search, mode: 'insensitive'}},
-                    {email: {contains: params.search, mode: 'insensitive'}}
-                ]
-            })
+        const where: any = {};
+
+        if (params.search) {
+            where.name = { contains: params.search, mode: 'insensitive' };
+        }
+
+        if (params.status) {
+            where.status = { contains: params.search, mode: 'insensitive' };
+        }
+
+        const whereForCount: any = { ...where };
+        if (whereForCount.name && whereForCount.name.mode) {
+            delete whereForCount.name.mode;
         }
 
         const [clients, total] = await Promise.all([
@@ -76,8 +81,8 @@ export class PrismaClientRepository implements ClientRepository {
                 skip: (params.page - 1) * params.limit,
                 take: params.limit,
             }),
-            this.prisma.client.count({where})
-        ])
+            this.prisma.client.count({where: whereForCount})
+        ]);
 
         return {
             clients: clients.map(client => ({
