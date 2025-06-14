@@ -1,5 +1,5 @@
-import {FastifyReply, FastifyRequest} from 'fastify'
-import {ClientService} from "@application/services/client.services";
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { ClientService } from "@application/services/client.services";
 import {
     CreateClient,
     createClientSchema,
@@ -29,10 +29,10 @@ export class ClientController {
         return reply.send(client)
     }
 
-    async findMany(request: FastifyRequest<{ Params: FindClients }>, reply: FastifyReply) {
-        const params = findClientsSchema.parse(request.params)
-        const clients = await this.clientService.findMany(params)
-        return reply.send(clients)
+    async findMany(request: FastifyRequest<{ Querystring: FindClients }>, reply: FastifyReply) {
+        const params = findClientsSchema.parse(request.query);
+        const clients = await this.clientService.findMany(params);
+        return reply.send(clients);
     }
 
     async update(request: FastifyRequest<{ Params: FindClient; Body: UpdateClient }>, reply: FastifyReply) {
