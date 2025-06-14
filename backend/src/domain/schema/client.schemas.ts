@@ -19,10 +19,10 @@ export const findClientSchema = z.object({
 })
 
 export const findClientsSchema = z.object({
-    page: z.number().int().positive().optional().default(1),
-    limit: z.number().int().positive().optional().default(10),
-    status: clientStatusSchema.optional(),
-    search: z.string().optional()
+    search: z.string().optional(),
+    page: z.coerce.number().min(1).default(1),
+    limit: z.coerce.number().min(1).default(10),
+    status: clientStatusSchema.optional()
 })
 
 export const deleteClientSchema = z.object({
