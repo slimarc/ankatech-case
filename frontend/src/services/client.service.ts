@@ -2,8 +2,14 @@ import { api } from '@/lib/axios';
 import { ClientsListResponse, ClientResponse, CreateClientPayload, UpdateClientPayload } from '@/validations/client.validations';
 
 export const ClientApiService = {
-    getClientList: async (page: number, limit: number) => {
-        const response = await api.get<ClientsListResponse>('/clients', { params: { page, limit } });
+    getClientList: async (page: number, limit: number,  searchTerm?: string) => {
+        const response = await api.get<ClientsListResponse>('/clients', {
+            params: { page, limit, search: searchTerm } });
+        return response.data;
+    },
+
+    getClientById: async (id: string) => {
+        const response = await api.get<ClientResponse>(`/clients/${id}`);
         return response.data;
     },
 
