@@ -1,10 +1,19 @@
 import { z } from 'zod';
+import { portfolioAssetItemResponseSchema} from './asset.validations';
 
-export const portfolioAssetResponseSchema = z.object({
+export const portfolioClientResponseSchema = z.object({
     id: z.string().uuid(),
-    name: z.string(),
-    currentValue: z.string(),
-    quantity: z.string(),
+    clientId: z.string().uuid(),
+    client: z.object({
+        id: z.string().uuid(),
+        name: z.string(),
+        email: z.string().email(),
+        status: z.enum(['ACTIVE', 'INACTIVE'])
+    }),
+    assets: z.array(portfolioAssetItemResponseSchema),
+    total: z.number(),
+    page: z.number(),
+    limit: z.number()
 });
 
-export type PortfolioAssetResponse = z.infer<typeof portfolioAssetResponseSchema>;
+export type PortfolioClientResponse = z.infer<typeof portfolioClientResponseSchema>;
