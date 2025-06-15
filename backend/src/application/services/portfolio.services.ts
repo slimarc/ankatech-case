@@ -2,6 +2,7 @@ import {PortfolioRepository} from "@domain/repository/portfolio.repository";
 import {
     DeletePortfolio,
     FindPortfolio,
+    FindPortfolioByClientId,
     FindPortfolios,
     PortfolioResponse,
     PortfoliosResponse,
@@ -13,6 +14,10 @@ export class PortfolioService {
 
     async findById(params: FindPortfolio): Promise<PortfolioResponse> {
         return this.portfolioRepository.findById(params)
+    }
+
+    async findByClientId(params: FindPortfolioByClientId): Promise<PortfolioResponse | null> {
+        return this.portfolioRepository.findByClientId(params)
     }
 
     async findMany(params: FindPortfolios): Promise<PortfoliosResponse> {

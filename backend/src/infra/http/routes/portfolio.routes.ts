@@ -10,6 +10,12 @@ export const portfolioRoutes = (fastify: FastifyInstance, controller: PortfolioC
 
     fastify.route({
         method: 'GET',
+        url: "/portfolios/clients/:clientId",
+        handler: controller.findPortfolioByClientId.bind(controller)
+    })
+
+    fastify.route({
+        method: 'GET',
         url: "/portfolios",
         handler: controller.findMany.bind(controller)
     })

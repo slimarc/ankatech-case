@@ -5,7 +5,8 @@ import {
     FindPortfolios,
     findPortfoliosSchema,
     DeletePortfolio,
-    deletePortfolioSchema
+    deletePortfolioSchema,
+    FindPortfolioByClientId, findPortfolioByClientIdSchema
 } from "@domain/schema/portfolio.schemas";
 import {FastifyReply, FastifyRequest} from "fastify";
 
@@ -14,8 +15,14 @@ export class PortfolioController {
 
     async findById(request: FastifyRequest<{ Params: FindPortfolio }>, reply: FastifyReply) {
         const params = findPortfolioSchema.parse(request.params)
-        const asset = await this.portfolioService.findById(params)
-        return reply.send(asset)
+        const assets = await this.portfolioService.findById(params)
+        return reply.send(assets)
+    }
+
+    async findPortfolioByClientId(request: FastifyRequest<{ Params: FindPortfolioByClientId }>, reply: FastifyReply) {
+        const params = findPortfolioByClientIdSchema.parse(request.params)
+        const assets = await this.portfolioService.findByClientId(params)
+        return reply.send(assets)
     }
 
     async findMany(request: FastifyRequest<{ Params: FindPortfolios }>, reply: FastifyReply) {
