@@ -53,8 +53,17 @@ export const assetsListResponseSchema = z.object({
     limit: z.number(),
 });
 
+export const portfolioAssetItemResponseSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    currentValue: z.string(),
+    quantity: z.string(),
+});
+
 export type AssetsListResponse = z.infer<typeof assetsListResponseSchema>;
 export type AssetFormData = z.infer<typeof assetFormInputSchema>;
 export type CreateAssetPayload = z.infer<typeof createAssetPayloadSchema>;
 export type UpdateAssetPayload = z.infer<typeof updateAssetPayloadSchema>;
 export type AssetResponse = z.infer<typeof assetResponseSchema>;
+export type PortfolioAssetItemResponse = z.infer<typeof portfolioAssetItemResponseSchema>;
+

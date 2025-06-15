@@ -28,9 +28,9 @@
     "typescript": "^5.8.3"
   },
   "_moduleAliases": {
-    "@application": "dist/application",
-    "@core": "dist/core",
-    "@domain": "dist/domain",
-    "@infra": "dist/infra"
+    "@application": "./dist/application",
+    "@core": "./dist/core",
+    "@domain": "./dist/domain",
+    "@infra": "./dist/infra"
   }
 }
