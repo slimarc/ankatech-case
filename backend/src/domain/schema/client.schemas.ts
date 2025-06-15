@@ -1,5 +1,4 @@
 import {z} from 'zod'
-import {portfolioClientResponseSchema} from "@domain/schema/portfolio.schemas";
 
 export const clientStatusSchema = z.enum(['ACTIVE', 'INACTIVE'])
 
@@ -43,11 +42,6 @@ export const clientsResponseSchema = z.object({
     limit: z.number()
 })
 
-export const clientDetailResponseSchema = clientResponseSchema.extend({
-    portfolio: z.union([portfolioClientResponseSchema, z.string(), z.null()]),
-});
-
-
 export type CreateClient = z.infer<typeof createClientSchema>
 export type UpdateClient = z.infer<typeof updateClientSchema>
 export type FindClient = z.infer<typeof findClientSchema>
@@ -55,4 +49,3 @@ export type FindClients = z.infer<typeof findClientsSchema>
 export type DeleteClient = z.infer<typeof deleteClientSchema>
 export type ClientResponse = z.infer<typeof clientResponseSchema>
 export type ClientsResponse = z.infer<typeof clientsResponseSchema>
-export type ClientDetailResponse = z.infer<typeof clientDetailResponseSchema>;

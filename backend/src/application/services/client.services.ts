@@ -1,7 +1,6 @@
 import {ClientRepository} from "@domain/repository/client.repository";
 import { PortfolioRepository } from "@domain/repository/portfolio.repository";
 import {
-    ClientDetailResponse,
     ClientResponse,
     ClientsResponse,
     CreateClient,
@@ -49,19 +48,8 @@ export class ClientService {
         await this.clientRepository.delete(params);
     }
 
-    async findById(params: FindClient): Promise<ClientDetailResponse> {
-        const client = await this.clientRepository.findById(params);
-
-        const portfolioClientResponse = await this.portfolioRepository.findByClientId({ clientId: client.id });
-        const dataPortfolioClientResponse = portfolioClientResponse ? portfolioClientResponse : "The client does not yet have investments";
-
-        return {
-            id: client.id,
-            name: client.name,
-            email: client.email,
-            status: client.status,
-            portfolio: dataPortfolioClientResponse,
-        };
+    async findById(params: FindClient): Promise<ClientResponse> {
+        return this.clientRepository.findById(params);
     }
 
     async findMany(params: FindClients): Promise<ClientsResponse> {

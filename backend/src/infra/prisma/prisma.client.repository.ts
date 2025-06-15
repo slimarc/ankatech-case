@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import {ClientRepository} from "@domain/repository/client.repository";
 import {
-    ClientDetailResponse,
     ClientResponse,
     ClientsResponse,
     CreateClient,
@@ -25,38 +24,16 @@ export class PrismaClientRepository implements ClientRepository {
         };
     }
 
-    async findById(params: FindClient): Promise<ClientDetailResponse> {
+    async findById(params: FindClient): Promise<ClientResponse> {
         const client = await this.prisma.client.findUniqueOrThrow({
-            where: { id: params.id },
-            include: {
-                portfolio: {
-                    include: {
-                        assets: {
-                            include: {
-                                asset: true,
-                            },
-                        },
-                    },
-                },
-            },
-        });
-
+            where: { id: params.id }
+        })
         return {
             id: client.id,
             name: client.name,
             email: client.email,
             status: client.status,
-            portfolio: client.portfolio ? {
-                id: client.portfolio.id,
-                assets: client.portfolio.assets.map((holding) => ({
-                    id: holding.asset.id,
-                    name: holding.asset.name,
-                    currentValue: holding.asset.currentValue.toFixed(2),
-                    quantity: holding.quantity.toFixed(4),
-                })),
-            } : null,
         };
-
     }
 
     async findMany(params: FindClients): Promise<ClientsResponse> {
