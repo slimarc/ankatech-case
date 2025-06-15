@@ -109,16 +109,16 @@ export default function AssetsPage() {
         return <p className="text-center p-4 text-red-500">Erro ao carregar ativos: {error.message}</p>;
     }
 
-    return (
-        <div className="container mx-auto py-10">
-            <h1 className="text-3xl font-bold mb-6 text-center">Lista de Ativos financeiros</h1>
+    return (    
+        <div className="container mx-auto py-4 sm:py-6 md:py-10 px-2 sm:px-4 md:px-6">
+            <h1 className="text-3xl font-bold mb-6 text-center">Ativos Financeiros</h1>
             <div className="flex justify-between items-center mb-4">
                 <Link href="/" passHref>
-                    <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900 cursor-pointer">
+                    <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900 cursor-pointer mb-2 sm:mb-0">
                         <ArrowLeft className="h-6 w-6" />
                     </Button>
                 </Link>
-                <Button variant="ghost" size="icon" onClick={handleAddAssetClick} className="cursor-pointer">
+                <Button variant="ghost" size="icon" onClick={handleAddAssetClick} className="cursor-pointer mb-2 sm:mb-0">
                     <Plus className="h-6 w-6" />
                 </Button>
             </div>
@@ -134,44 +134,67 @@ export default function AssetsPage() {
             {data?.assets.length === 0 ? (
                 <p className="text-center text-gray-500">Nenhum ativo financeiro encontrado.</p>
             ) : (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Nome</TableHead>
-                            <TableHead className="text-right">Valor atual</TableHead>
-                            <TableHead className="text-right">Ações</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {data?.assets.map((asset: AssetResponse) => (
-                            <TableRow key={asset.id}>
-                                <TableCell className="font-medium">{asset.name}</TableCell>
-                                <TableCell className="text-left">
-                                    <div className="flex items-center justify-end gap-x-0.5">
-                                        <span>R$</span>
-                                        <span>{asset.currentValue}</span>
+                <>
+                    <div className="hidden md:block">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Nome</TableHead>
+                                    <TableHead className="text-right">Valor atual</TableHead>
+                                    <TableHead className="text-right">Ações</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {data?.assets.map((asset: AssetResponse) => (
+                                    <TableRow key={asset.id}>
+                                        <TableCell className="font-medium">{asset.name}</TableCell>
+                                        <TableCell className="text-left">
+                                            <div className="flex items-center justify-end gap-x-0.5">
+                                                <span>R$</span>
+                                                <span>{asset.currentValue}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost"
+                                                    size="icon"
+                                                    className="cursor-pointer mb-2 sm:mb-0" onClick={() => handleEdit(asset)}>
+                                                <Pencil className="h-4 w-4"/>
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-red-500 hover:text-red-700 cursor-pointer mb-2 sm:mb-0"
+                                                onClick={() => handleDelete(asset.id)}
+                                                disabled={isRemoving}>
+                                                {isRemoving ? ( <span className="animate-spin text-red-500">...</span>) :
+                                                    (<Trash2 className="h-4 w-4" />)}
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    <div className="block md:hidden">
+                        <ul className="space-y-4">
+                            {data?.assets.map((asset: AssetResponse) => (
+                                <li key={asset.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
+                                    <div className="font-bold text-lg text-white mb-2">{asset.name}</div>
+                                    <div className="text-gray-400 text-sm">{asset.currentValue}</div>
+                                    <div className="flex justify-end mt-4">
+                                        <Button variant="ghost" size="icon" className="cursor-pointer mr-2" onClick={() => handleEdit(asset)}>
+                                            <Pencil className="h-4 w-4"/>
+                                        </Button>
+                                        <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-700 cursor-pointer" onClick={() => handleDelete(asset.id)} disabled={isRemoving}>
+                                            {isRemoving ? ( <span className="animate-spin text-red-500">...</span>) : (<Trash2 className="h-4 w-4" />)}
+                                        </Button>
                                     </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost"
-                                            size="icon"
-                                            className="cursor-pointer" onClick={() => handleEdit(asset)}>
-                                        <Pencil className="h-4 w-4"/>
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="text-red-500 hover:text-red-700 cursor-pointer"
-                                        onClick={() => handleDelete(asset.id)}
-                                        disabled={isRemoving}>
-                                        {isRemoving ? ( <span className="animate-spin text-red-500">...</span>) :
-                                            (<Trash2 className="h-4 w-4" />)}
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </>
             )}
             <div className="mt-6 text-left text-gray-600">
                 <p>Total de ativos financeiro: {data?.total}</p>
