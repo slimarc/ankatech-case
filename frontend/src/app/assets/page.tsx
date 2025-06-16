@@ -179,7 +179,7 @@ export default function AssetsPage() {
                     <div className="block md:hidden">
                         <ul className="space-y-4">
                             {data?.assets.map((asset: AssetResponse) => (
-                                <li key={asset.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
+                                <li key={asset.id} className="p-4 rounded-lg shadow-md">
                                     <div className="font-bold text-lg text-white mb-2">{asset.name}</div>
                                     <div className="text-gray-400 text-sm">{asset.currentValue}</div>
                                     <div className="flex justify-end mt-4">

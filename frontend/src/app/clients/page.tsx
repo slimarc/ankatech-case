@@ -124,7 +124,7 @@ export default function ClientsPage() {
                     </Button>
                 </Link>
                 <div className="flex items-center gap-2 ml-auto">
-                    <Input placeholder="Pesquise pelo nome..." value={searchTerm} className="w-80"
+                    <Input placeholder="Pesquise pelo nome..." value={searchTerm} className="w-60"
                            onChange={(e) => setSearchTerm(e.target.value)}/>
                     <Button variant="ghost" size="icon" onClick={handleAddClientClick} className="cursor-pointer mb-2 sm:mb-0">
                         <Plus className="h-6 w-6" />
@@ -192,11 +192,18 @@ export default function ClientsPage() {
                     <div className="block md:hidden">
                         <ul className="space-y-4">
                             {data?.clients.map((client: ClientResponse) => (
-                                <li key={client.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
+                                <li key={client.id} className="p-4 rounded-lg shadow-md transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:z-10 border">
                                     <div className="font-bold text-lg text-white mb-2">{client.name}</div>
                                     <div className="text-gray-400 text-sm">{client.email}</div>
                                     <div className="text-gray-400 text-sm">Status: {client.status}</div>
                                     <div className="flex justify-end mt-4">
+                                        <Link href={`/clients/${client.id}`} passHref>
+                                            <Button variant="ghost"
+                                                    size="icon"
+                                                    className="cursor-pointer mr-2 sm:mb-0">
+                                                <Wallet className="h-4 w-4"/>
+                                            </Button>
+                                        </Link>
                                         <Button variant="ghost" size="icon" className="cursor-pointer mr-2" onClick={() => handleEdit(client)}>
                                             <Pencil className="h-4 w-4"/>
                                         </Button>
